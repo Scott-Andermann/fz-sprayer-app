@@ -1,4 +1,4 @@
-import React, {FC, useCallback} from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -7,8 +7,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
-import {Device} from 'react-native-ble-plx';
+import { Device } from 'react-native-ble-plx';
+import { darkGreen, gunmetal } from '../lib/colors';
+
 
 type DeviceModalListItemProps = {
   item: ListRenderItemInfo<Device>;
@@ -24,24 +27,31 @@ type DeviceModalProps = {
 };
 
 const DeviceModalListItem: FC<DeviceModalListItemProps> = props => {
-  const {item, connectToPeripheral, closeModal} = props;
+  const { item, connectToPeripheral, closeModal } = props;
 
-  const connectAndCloseModal = useCallback(() => {
-    connectToPeripheral(item.item);
-    closeModal();
-  }, [closeModal, connectToPeripheral, item.item]);
+  const makeConnection = async () => {
+    setTimeout(() => connectToPeripheral(item.item), 3000);
+  }
+
+  const connectAndCloseModal = useCallback(async () => {
+    await makeConnection();
+    // connectToPeripheral(item.item);
+    await closeModal();
+  }, [closeModal, connectToPeripheral, item.item]);  
 
   return (
     <TouchableOpacity
       onPress={connectAndCloseModal}
       style={modalStyle.ctaButton}>
       <Text style={modalStyle.ctaButtonText}>{item.item.name}</Text>
+      {/* <Text style={modalStyle.ctaButtonText}>{item.item.name}</Text> */}
     </TouchableOpacity>
   );
 };
 
 const DeviceModal: FC<DeviceModalProps> = props => {
-  const {devices, visible, connectToPeripheral, closeModal} = props;
+  const { devices, visible, connectToPeripheral, closeModal } = props;
+
 
   const renderDeviceModalListItem = useCallback(
     (item: ListRenderItemInfo<Device>) => {
@@ -67,10 +77,15 @@ const DeviceModal: FC<DeviceModalProps> = props => {
           Tap on a device to connect
         </Text>
         <FlatList
-          contentContainerStyle={modalStyle.modalFlatlistContiner}
+          contentContainerStyle={modalStyle.modalFlatlistContainer}
           data={devices}
           renderItem={renderDeviceModalListItem}
         />
+        <TouchableOpacity
+          onPress={closeModal}
+          style={modalStyle.ctaButton}>
+          <Text style={modalStyle.ctaButtonText}>Close</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </Modal>
   );
@@ -79,9 +94,9 @@ const DeviceModal: FC<DeviceModalProps> = props => {
 const modalStyle = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: gunmetal,
   },
-  modalFlatlistContiner: {
+  modalFlatlistContainer: {
     flex: 1,
     justifyContent: 'center',
   },
@@ -95,7 +110,7 @@ const modalStyle = StyleSheet.create({
   },
   modalTitle: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: gunmetal,
   },
   modalTitleText: {
     marginTop: 40,
@@ -105,7 +120,7 @@ const modalStyle = StyleSheet.create({
     textAlign: 'center',
   },
   ctaButton: {
-    backgroundColor: 'purple',
+    backgroundColor: darkGreen,
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,

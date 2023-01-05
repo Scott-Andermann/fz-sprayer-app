@@ -1,5 +1,5 @@
 /* eslint-disable no-bitwise */
-import {useState} from 'react';
+import {useState, Dispatch, SetStateAction} from 'react';
 import {PermissionsAndroid, Platform} from 'react-native';
 import {
   BleError,
@@ -12,8 +12,9 @@ import DeviceInfo from 'react-native-device-info';
 
 import {atob} from 'react-native-quick-base64';
 
-const HEART_RATE_UUID = '0000180d-0000-1000-8000-00805f9b34fb';
-const HEART_RATE_CHARACTERISTIC = '00002a37-0000-1000-8000-00805f9b34fb';
+const HEART_RATE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const HEART_RATE_CHARACTERISTIC = '0000180a-0000-1000-8000-00805f9b34fb';
+const char2 = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'
 
 const bleManager = new BleManager();
 
@@ -26,13 +27,20 @@ interface BluetoothLowEnergyApi {
   disconnectFromDevice: () => void;
   connectedDevice: Device | null;
   allDevices: Device[];
-  heartRate: number;
+  flowRate: number;
+  totalFlow: number;
+  spraySeconds: number;
+  startTime: number;
+  setSpraySeconds: Dispatch<SetStateAction<number>>;
 }
 
 function useBLE(): BluetoothLowEnergyApi {
   const [allDevices, setAllDevices] = useState<Device[]>([]);
   const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
-  const [heartRate, setHeartRate] = useState<number>(0);
+  const [flowRate, setFlowRate] = useState<number>(0);
+  const [totalFlow, setTotalFlow] = useState<number>(0);
+  const [spraySeconds, setSpraySeconds] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>(0);
 
   const requestPermissions = async (cb: VoidCallback) => {
     if (Platform.OS === 'android') {
@@ -80,7 +88,7 @@ function useBLE(): BluetoothLowEnergyApi {
       if (error) {
         console.log(error);
       }
-      if (device && device.name?.includes('CorSense')) {
+      if (device && device.name?.includes('Adafruit')) {
         setAllDevices((prevState: Device[]) => {
           if (!isDuplicteDevice(prevState, device)) {
             return [...prevState, device];
@@ -92,11 +100,19 @@ function useBLE(): BluetoothLowEnergyApi {
 
   const connectToDevice = async (device: Device) => {
     try {
+      // if (device){
+      //   const uuid = device['serviceUUIDs'];
+      //   console.log(uuid[0]);
+      //   ;
+      // }
+      
       const deviceConnection = await bleManager.connectToDevice(device.id);
       setConnectedDevice(deviceConnection);
-      await deviceConnection.discoverAllServicesAndCharacteristics();
+      const allSvcAndChar = await deviceConnection.discoverAllServicesAndCharacteristics();
       bleManager.stopDeviceScan();
-      startStreamingData(deviceConnection);
+      // console.log(deviceConnection);
+      setStartTime(new Date().getTime());
+      startStreamingData(allSvcAndChar);
     } catch (e) {
       console.log('FAILED TO CONNECT', e);
     }
@@ -106,7 +122,9 @@ function useBLE(): BluetoothLowEnergyApi {
     if (connectedDevice) {
       bleManager.cancelDeviceConnection(connectedDevice.id);
       setConnectedDevice(null);
-      setHeartRate(0);
+      setFlowRate(0);
+      setSpraySeconds(0);
+      setStartTime(0);
     }
   };
 
@@ -114,42 +132,50 @@ function useBLE(): BluetoothLowEnergyApi {
     error: BleError | null,
     characteristic: Characteristic | null,
   ) => {
+    
     if (error) {
+      console.log('this is where it fails');
+      
       console.log(error);
       return -1;
     } else if (!characteristic?.value) {
       console.log('No Data was recieved');
       return -1;
     }
-
+    
     const rawData = atob(characteristic.value);
-    let innerHeartRate: number = -1;
+    if (rawData[0] === 'f') {
+      const flow = Number(rawData.slice(1).trim())/100;
+      if (flow > 0) {
+        setSpraySeconds(prev => prev + 1);
+      }
+      setFlowRate(Number(rawData.slice(1).trim())/100);
 
-    const firstBitValue: number = Number(rawData) & 0x01;
-
-    if (firstBitValue === 0) {
-      innerHeartRate = rawData[1].charCodeAt(0);
-    } else {
-      innerHeartRate =
-        Number(rawData[1].charCodeAt(0) << 8) +
-        Number(rawData[2].charCodeAt(2));
     }
-
-    setHeartRate(innerHeartRate);
+    if (rawData[0] === 't') {
+      setTotalFlow(Number(rawData.slice(1).trim())/100);
+    }
+      
   };
 
+  const SERVICE_UUID = "0000180f-0000-1000-8000-00805f9b34fb"
+  const CHARACTERISTIC_UUID = "00002a20-0000-1000-8000-00805f9b34fb"
+  
   const startStreamingData = async (device: Device) => {
     if (device) {
       device.monitorCharacteristicForService(
-        HEART_RATE_UUID,
-        HEART_RATE_CHARACTERISTIC,
+        SERVICE_UUID,
+        CHARACTERISTIC_UUID,
+
         (error, characteristic) => onHeartRateUpdate(error, characteristic),
       );
+            
     } else {
       console.log('No Device Connected');
     }
   };
-
+  // console.log(allDevices);
+  
   return {
     scanForPeripherals,
     requestPermissions,
@@ -157,7 +183,11 @@ function useBLE(): BluetoothLowEnergyApi {
     allDevices,
     connectedDevice,
     disconnectFromDevice,
-    heartRate,
+    flowRate,
+    totalFlow,
+    spraySeconds,
+    startTime,
+    setSpraySeconds
   };
 }
 
