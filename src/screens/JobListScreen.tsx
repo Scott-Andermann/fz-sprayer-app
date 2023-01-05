@@ -12,13 +12,18 @@ import JobListFooter from '../components/JobListFooter';
 import { darkGreen, gunmetal } from '../lib/colors';
 
 interface description {
-    name: string
+    name: string,
+    chemical: string,
+    jobType: string,
+    notes: string
 }
 
 interface element {
     time: Array<string>,
-    totalFlow: Array<Number>,
-    description: description
+    totalFlow: Array<number>,
+    description: description,
+    totalTime: string
+    startTime: number
 }
 
 const JobListScreen = () => {
@@ -26,6 +31,7 @@ const JobListScreen = () => {
     // TODO: create job card to extend
     // TODO: call api again on scroll
     const [data, setData] = useState<Array<element>>([]);
+    const [showData, setShowData] = useState<Array<element>>([]);
     const [page, setPage] = useState<number>(0);
     const [end, setEnd] = useState<boolean>(false);
 
@@ -37,6 +43,7 @@ const JobListScreen = () => {
             setEnd(true)
             return
         }
+        console.log(result);
         
         setData(prev => [...prev, ...result])
         setPage(prev => prev + 1)
@@ -46,19 +53,20 @@ const JobListScreen = () => {
         hitAPI()
     }, []);
 
-    // console.log(data.length);
     
 
     return ( 
         <View style={styles.container}>
-            {/* <ScrollView>
-                {data.length > 0 && data.map((element: element, index: React.Key | null | undefined) => <JobCard key={index} timeArray={element['time']} totalFlow={element['totalFlow']} description={element['description']}/>)}
-            </ScrollView> */}
             {data.length > 0 && <FlatList
                 onEndReached={hitAPI}
                 data={data}
                 ListFooterComponent={<JobListFooter end={end} />}
-                renderItem={({item: element}) => (<JobCard timeArray={element['time']} totalFlow={element['totalFlow']} description={element['description']}/>)}
+                renderItem={({item: element}) => (<JobCard 
+                    timeArray={element['time']} 
+                    totalFlow={element['totalFlow']} 
+                    description={element['description']} 
+                    totalTime={element['totalTime']}
+                    startTime={element['startTime']}/>)}
             />
             }
             <View style={{height: 20}} />
@@ -77,7 +85,8 @@ const styles = StyleSheet.create({
         backgroundColor: gunmetal,
         height: '100%',
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        // alignItems:'center',
     },
     button: {
         // backgroundColor: darkGreen,

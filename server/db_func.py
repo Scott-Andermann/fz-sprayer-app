@@ -4,6 +4,11 @@ from nanoid import generate
 import json
 import math
 import time
+from dotenv import load_dotenv
+
+def get_password():
+    load_dotenv()
+    return os.environ['SQL_PASSWORD']
 
 def add_job(job_info, user_id):
     # print(type(user_id))
@@ -11,7 +16,7 @@ def add_job(job_info, user_id):
         with connect(
             host='localhost',
             user='root',
-            password='Renthal1!',
+            password=get_password(),
             database='flowzone_app'
         ) as connection:
             add_job_query = """INSERT INTO jobs
@@ -43,8 +48,11 @@ def db_query(page, num_results, connection):
         # print(result[0][2])
         # print(result)
     raw_job_data = []
+    times = []
     for item in result:
+        print(item)
         raw_job_data.append(item[3])
+        times.append(item[1])
         # raw_job_data = [result[0][3], result[1][3]]
     processed_job_data = []
     for job in raw_job_data:
@@ -69,7 +77,7 @@ def db_query(page, num_results, connection):
         flow_data.append(info['totalFlow'][n-1])
         # print(time_data)
         # print(flow_data)
-        processed_job_data.append({'description': info['description'], 'time': time_data, 'totalFlow': flow_data})
+        processed_job_data.append({'startTime': start_time, 'description': info['description'], 'time': time_data, 'totalFlow': flow_data, 'totalTime': convert_to_mins((info['time'][n-1] - start_time) / 1000)})
     # print(json.dumps(processed_job_data))
     return json.dumps(processed_job_data)
 
@@ -78,7 +86,7 @@ def get_jobs_from_db(page):
         with connect(
             host='localhost',
             user='root',
-            password='Renthal1!',
+            password=get_password(),
             database='flowzone_app'
         ) as connection:
             return db_query(page, 3, connection)
@@ -93,3 +101,7 @@ def get_jobs_from_db(page):
             print(e)
     except Error as e:
         print(e)
+
+
+if __name__ == '__main__':
+    print(get_password())

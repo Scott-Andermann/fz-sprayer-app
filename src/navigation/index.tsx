@@ -4,8 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screens/Home';
 import NewJobScreen from '../screens/NewJobScreen';
 import { Device } from 'react-native-ble-plx';
-import ConnectScreen from '../screens/ConnectScreen';
 import JobListScreen from '../screens/JobListScreen';
+import DefaultsScreen from '../screens/DefaultsScreen';
 import { gunmetal, white } from '../lib/colors';
 
 
@@ -42,6 +42,7 @@ export const RootNavigator = ({exposeModal, setExposeModal, data, connected, dis
           {(props) => <NewJobScreen {...props} data={data} connected={connected} setExposeModal={setExposeModal} exposeModal={exposeModal} disconnectFromDevice={disconnectFromDevice} setSpraySeconds={setSpraySeconds}/>}
         </Stack.Screen>
         <Stack.Screen name="Job List" component={JobListScreen} />
+        <Stack.Screen name="Defaults" component={DefaultsScreen} />
         {/* <Stack.Screen name='Connect' > */}
           {/* {(props) => <ConnectScreen {...props} exposeModal={exposeModal} setExposeModal={setExposeModal}/>} */}
         {/* </Stack.Screen> */}

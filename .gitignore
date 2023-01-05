@@ -66,5 +66,6 @@ buck-out/
 */venv/
 */__pycache__
 
+*.env
 
 *scratch*

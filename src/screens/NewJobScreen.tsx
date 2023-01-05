@@ -5,6 +5,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    ActivityIndicator
 } from 'react-native';
 import RunJob from '../components/RunJob';
 import SaveConfirmModal from '../components/SaveConfirmModal';
@@ -31,6 +32,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
     const [started, setStarted] = useState<boolean>(false);
     const [saveModal, setSaveModal] = useState<boolean>(false);
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
+    const [tryingToConnect, setTryingToConnect] = useState<boolean>(false);
     const [description, setDescription] = useState<{ name: string, notes: string, jobType: string, chemical: string, technician: string }>({
         name: '',
         notes: '',
@@ -59,13 +61,15 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
         // console.log(exportData);
 
         const response = await fetch('http://localhost:5000/add_data',
-            {method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({type: 'SAVE', userID: 'user1', data: exportData})}
-            );
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'SAVE', userID: 'user1', data: exportData })
+            }
+        );
         const result = await response.json();
         console.log('result: ', result);
-        
+
         setStarted(false);
         setFlowRateArray([]);
         setTimeArray([]);
@@ -84,6 +88,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
 
     const disconnect = () => {
         disconnectFromDevice();
+        setTryingToConnect(false);
     }
 
     const tick = () => {
@@ -91,8 +96,13 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
             return
         }
         setTotalTime(prev => prev + 1);
-
     }
+
+    const openConnectionModal = () => {
+        setExposeModal?.(!exposeModal)
+        setTryingToConnect(true)
+    }
+
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -137,11 +147,20 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                         </>
                         :
                         <View style={styles.heartRateTitleWrapper}>
-                            <Text style={styles.heartRateTitleText}>Please connect to a sprayer</Text>
-                            <TouchableOpacity style={styles.ctaButton}
-                                onPress={() => setExposeModal?.(!exposeModal)}>
-                                <Text style={styles.ctaButtonText}>Connect</Text>
-                            </TouchableOpacity>
+                            {tryingToConnect ?
+                                <>
+                                    <Text style={styles.heartRateTitleText}>Connecting...</Text>
+                                    <ActivityIndicator size='large' />
+                                </>
+                                :
+                                <>
+                                    <Text style={styles.heartRateTitleText}>Please connect to a sprayer</Text>
+                                    <TouchableOpacity style={styles.ctaButton}
+                                        onPress={openConnectionModal}>
+                                        <Text style={styles.ctaButtonText}>Connect</Text>
+                                    </TouchableOpacity>
+                                </>
+                            }
                         </View>
                     }
                 </>
@@ -153,9 +172,9 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                 totalTime={totalTime}
                 startingFlow={startingFlow}
                 description={description}
-                setDescription={setDescription} 
-                setConfirmModal={setConfirmModal}/>
-            <SaveConfirmModal confirmModal={confirmModal} closeModal={saveJob} setConfirmModal={setConfirmModal}/>
+                setDescription={setDescription}
+                setConfirmModal={setConfirmModal} />
+            <SaveConfirmModal confirmModal={confirmModal} closeModal={saveJob} setConfirmModal={setConfirmModal} />
         </View>
     );
 }

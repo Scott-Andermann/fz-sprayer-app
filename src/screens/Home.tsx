@@ -49,9 +49,9 @@ const Home = ({ navigation }:{navigation: any}) => {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={getAPI}>
+                onPress={() => navigation.navigate('Defaults')}>
                 <Text style={styles.buttonText}>
-                    GET Lambda API
+                    Set Defaults
                 </Text>
             </TouchableOpacity>
         </View>
