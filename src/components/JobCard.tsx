@@ -31,18 +31,18 @@ const JobCard = ({ timeArray, totalFlow, description, totalTime, startTime }: pr
             <Text style={styles.titleText}>{description['name']}</Text>
             <View style={styles.cardWrapper}>
 
-            <View style={styles.tableWrapper}>
-                <JobInfoField titleText='Date' value={startTime} />
-                <JobInfoField titleText='Time' value={totalTime} />
-                <JobInfoField titleText='Output' value={totalFlow[totalFlow.length - 1]} />
+                <View style={styles.tableWrapper}>
+                    <JobInfoField titleText='Date' value={startTime} />
+                    <JobInfoField titleText='Time' value={totalTime} />
+                    <JobInfoField titleText='Output' value={totalFlow[totalFlow.length - 1]} />
+                </View>
+                <View style={styles.chartWrapper}>
+                    <SummaryLineChart
+                        timeArray={timeArray}
+                        totalFlow={totalFlow}
+                    />
+                </View>
             </View>
-            <View style={styles.chartWrapper}>
-                <SummaryLineChart
-                    timeArray={timeArray}
-                    totalFlow={totalFlow}
-                />
-            </View>
-                    </View>
         </View>
     );
 }

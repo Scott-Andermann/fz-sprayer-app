@@ -5,20 +5,28 @@ import Home from '../screens/Home';
 import NewJobScreen from '../screens/NewJobScreen';
 import { Device } from 'react-native-ble-plx';
 import JobListScreen from '../screens/JobListScreen';
-import DefaultsScreen from '../screens/DefaultsScreen';
-import { gunmetal, white } from '../lib/colors';
+import AccountInfoScreen from '../screens/AccountInfoScreen';
+import { gunmetal, lightGreen, lightGunmetal, white, red, darkGreen } from '../lib/colors';
 
 
 const appTheme ={
-  dark: true,
+  ...DarkTheme,
+  // dark: true,
   colors: {
+    primary: darkGreen,
     background: gunmetal,
+    card: gunmetal,
     text: white,
+    border: '#00000000',
+    notification: red,
   }
 }
 
 export type RootStackParamList = {
   Home: undefined;
+  Job: undefined;
+  History: undefined;
+  Account: undefined;
   Device: { device: Device };
 };
 
@@ -29,20 +37,30 @@ interface IProps {
   data: any,
   connected: boolean,
   disconnectFromDevice: any,
+  tryingToConnect: boolean,
+  setTryingToConnect?: Dispatch<SetStateAction<boolean>>,
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-export const RootNavigator = ({exposeModal, setExposeModal, data, connected, disconnectFromDevice, setSpraySeconds}: IProps) => (
+export const RootNavigator = ({exposeModal, setExposeModal, data, connected, disconnectFromDevice, setSpraySeconds, tryingToConnect, setTryingToConnect}: IProps) => (
     <NavigationContainer theme={appTheme}>
       <Stack.Navigator screenOptions={{presentation: 'card'}}>
         <Stack.Screen name="Home" component={Home} />
         {/* <Stack.Screen name="Job" component={Home} /> */}
-        <Stack.Screen name="New Job" >
-          {(props) => <NewJobScreen {...props} data={data} connected={connected} setExposeModal={setExposeModal} exposeModal={exposeModal} disconnectFromDevice={disconnectFromDevice} setSpraySeconds={setSpraySeconds}/>}
+        <Stack.Screen name="Job" options={{title: 'Job'}}>
+          {(props) => <NewJobScreen {...props} 
+              data={data} 
+              connected={connected} 
+              setExposeModal={setExposeModal} 
+              exposeModal={exposeModal} 
+              disconnectFromDevice={disconnectFromDevice} 
+              setSpraySeconds={setSpraySeconds}
+              tryingToConnect={tryingToConnect}
+              setTryingToConnect={setTryingToConnect}/>}
         </Stack.Screen>
-        <Stack.Screen name="Job List" component={JobListScreen} />
-        <Stack.Screen name="Defaults" component={DefaultsScreen} />
+        <Stack.Screen name="History" options={{title: 'Job History'}} component={JobListScreen} />
+        <Stack.Screen name="Account" options={{title: 'Account Info'}} component={AccountInfoScreen} />
         {/* <Stack.Screen name='Connect' > */}
           {/* {(props) => <ConnectScreen {...props} exposeModal={exposeModal} setExposeModal={setExposeModal}/>} */}
         {/* </Stack.Screen> */}

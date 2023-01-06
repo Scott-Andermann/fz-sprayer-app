@@ -3,23 +3,32 @@ import { StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { lightGunmetal, gunmetal, rem, white } from '../lib/colors';
 
-const SaveJobFields = ({description, setDescription}: {description: any, setDescription: Dispatch<SetStateAction<any>>}) => {
+interface description {
+    name: string,
+    chemical: string,
+    jobType: string,
+    notes: string
+}
 
-    const handleNameChange = (e: {e?: string}) => {
-        setDescription(prev => ({...prev, name: e}))
+const SaveJobFields = ({description, setDescription}: {description: description, setDescription: Dispatch<SetStateAction<any>>}) => {
+
+    const handleNameChange = (e: string) => {
+        setDescription((prev: description) => ({...prev, name: e}))
     }
-    const handleTechChange = (e: {e?: string}) => {
-        setDescription(prev => ({...prev, technician: e}))
+    const handleTechChange = (e: string) => {
+        setDescription((prev: description) => ({...prev, technician: e}))
     }
-    const handleTypeChange = (e: {e?: string}) => {
-        setDescription(prev => ({...prev, jobType: e}))
+    const handleTypeChange = (e: string) => {
+        setDescription((prev: description) => ({...prev, jobType: e}))
     }
-    const handleChemicalChange = (e: {e?: string}) => {
-        setDescription(prev => ({...prev, chemical: e}))
+    const handleChemicalChange = (e: string) => {
+        setDescription((prev: description) => ({...prev, chemical: e}))
     }
-    const handleNotesChange = (e: {e?: string}) => {
-        setDescription(prev => ({...prev, notes: e}))
+    const handleNotesChange = (e: string) => {
+        setDescription((prev: description) => ({...prev, notes: e}))
     }
+
+
 
     return ( 
         //maybe this needs to be a scroll view?

@@ -24,8 +24,8 @@ const BLEWrapper = () => {
         startTime,
         setSpraySeconds,
     } = useBLE();
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
     const [exposeModal, setExposeModal] = useState<boolean>(false);
+    const [tryingToConnect, setTryingToConnect] = useState<boolean>(false);
 
     const scanForDevices = () => {
         requestPermissions(isGranted => {
@@ -36,13 +36,16 @@ const BLEWrapper = () => {
     };
 
     const closeModal = () => {
-        setIsModalVisible(false);
         setExposeModal(false);
+    }
+
+    const cancelModal = () => {
+        setExposeModal(false);
+        setTryingToConnect(false);
     };
 
     const openModal = async () => {
         scanForDevices();
-        setIsModalVisible(true);
     };
 
     const createData = () => {
@@ -62,7 +65,14 @@ const BLEWrapper = () => {
 
     return (
         <>
-            <RootNavigator exposeModal={exposeModal} setExposeModal={setExposeModal} data={createData()} connected={connectedDevice ? true : false} disconnectFromDevice={disconnectFromDevice} setSpraySeconds={setSpraySeconds}/>
+            <RootNavigator exposeModal={exposeModal} 
+                setExposeModal={setExposeModal} 
+                data={createData()} connected={connectedDevice ? true : false} 
+                disconnectFromDevice={disconnectFromDevice} 
+                setSpraySeconds={setSpraySeconds}
+                setTryingToConnect={setTryingToConnect}
+                tryingToConnect={tryingToConnect}
+                />
             {/* {exposeModal && 
             <TouchableOpacity
                 onPress={connectedDevice ? disconnectFromDevice : openModal}
@@ -74,6 +84,7 @@ const BLEWrapper = () => {
             } */}
             <DeviceModal
                 closeModal={closeModal}
+                cancelModal={cancelModal}
                 visible={exposeModal}
                 connectToPeripheral={connectToDevice}
                 devices={allDevices}

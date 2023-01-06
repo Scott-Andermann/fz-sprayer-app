@@ -21,7 +21,7 @@ const SummaryLineChart = ({timeArray, totalFlow}: props) => {
                         drawCircleHole: false,
                         drawCircles: false,
                         drawValues: false,
-                        mode: 'LINEAR',
+                        // mode: 'LINEAR',
                         lineWidth: 2,
                         color: processColor(lightGreen),
                         textColor: processColor('white'),
@@ -30,7 +30,7 @@ const SummaryLineChart = ({timeArray, totalFlow}: props) => {
                             colors: [processColor(whiteTransparent), processColor(darkGreen)],
                             positions: [0, 0.5],
                             angle: 90,
-                            orientation: "BL_TR"
+                            orientation: "BL_TR" // this string is causing an error below
                         },
                         fillAlpha: 500,
                     }
@@ -55,7 +55,7 @@ const SummaryLineChart = ({timeArray, totalFlow}: props) => {
                 gridColor: processColor('black'),
                 drawAxisLine: false,
                 textColor: processColor('white'),
-                position: 'OUTSIDE_CHART',
+                position: 'OUTSIDE_CHART', //this string is causing the error below
                 yOffset: 0,
                 labelCount: 6,
                 labelCountForce: true,
@@ -63,7 +63,7 @@ const SummaryLineChart = ({timeArray, totalFlow}: props) => {
             }
         },
         xAxis: {
-            position: 'BOTTOM',
+            position: "BOTTOM", // this string is causing the error below
             textColor: processColor('white'),
             drawGridLines: false,
             valueFormatter: timeArray

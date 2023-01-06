@@ -35,23 +35,23 @@ const Home = ({ navigation }:{navigation: any}) => {
             <View style={styles.spacer}></View>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('New Job')}>
+                onPress={() => navigation.navigate('Job')}>
                 <Text style={styles.buttonText}>
                     New Job
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('Job List')}>
+                onPress={() => navigation.navigate('History')}>
                 <Text style={styles.buttonText}>
                     Job List
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('Defaults')}>
+                onPress={() => navigation.navigate('Account')}>
                 <Text style={styles.buttonText}>
-                    Set Defaults
+                    Account Info
                 </Text>
             </TouchableOpacity>
         </View>

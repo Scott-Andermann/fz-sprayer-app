@@ -24,6 +24,7 @@ type DeviceModalProps = {
   visible: boolean;
   connectToPeripheral: (device: Device) => void;
   closeModal: () => void;
+  cancelModal: () => void;
 };
 
 const DeviceModalListItem: FC<DeviceModalListItemProps> = props => {
@@ -50,7 +51,7 @@ const DeviceModalListItem: FC<DeviceModalListItemProps> = props => {
 };
 
 const DeviceModal: FC<DeviceModalProps> = props => {
-  const { devices, visible, connectToPeripheral, closeModal } = props;
+  const { devices, visible, connectToPeripheral, closeModal, cancelModal } = props;
 
 
   const renderDeviceModalListItem = useCallback(
@@ -82,7 +83,7 @@ const DeviceModal: FC<DeviceModalProps> = props => {
           renderItem={renderDeviceModalListItem}
         />
         <TouchableOpacity
-          onPress={closeModal}
+          onPress={cancelModal}
           style={modalStyle.ctaButton}>
           <Text style={modalStyle.ctaButtonText}>Close</Text>
         </TouchableOpacity>
@@ -118,6 +119,7 @@ const modalStyle = StyleSheet.create({
     fontWeight: 'bold',
     marginHorizontal: 20,
     textAlign: 'center',
+    color: 'white'
   },
   ctaButton: {
     backgroundColor: darkGreen,

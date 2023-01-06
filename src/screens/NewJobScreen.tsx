@@ -19,9 +19,11 @@ interface IProps {
     data: any,
     connected: boolean,
     disconnectFromDevice: any,
+    setTryingToConnect?: Dispatch<SetStateAction<boolean>>,
+    tryingToConnect: boolean
 }
 
-const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds }: IProps) => {
+const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds, setTryingToConnect, tryingToConnect }: IProps) => {
     // const [currentTime, setCurrentTime] = useState<number>(0);
     // const [startTime, setStartTime] = useState<number>(0);
     const [totalTime, setTotalTime] = useState<number>(0);
@@ -32,7 +34,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
     const [started, setStarted] = useState<boolean>(false);
     const [saveModal, setSaveModal] = useState<boolean>(false);
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
-    const [tryingToConnect, setTryingToConnect] = useState<boolean>(false);
+    // const [tryingToConnect, setTryingToConnect] = useState<boolean>(false);
     const [description, setDescription] = useState<{ name: string, notes: string, jobType: string, chemical: string, technician: string }>({
         name: '',
         notes: '',
@@ -43,10 +45,6 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
 
     const exposeSaveModal = () => {
         setSaveModal(true);
-    }
-
-    const hideSaveModal = () => {
-        setSaveModal(false);
     }
 
     const saveJob = async () => {
@@ -88,7 +86,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
 
     const disconnect = () => {
         disconnectFromDevice();
-        setTryingToConnect(false);
+        setTryingToConnect?.(false);
     }
 
     const tick = () => {
@@ -100,7 +98,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
 
     const openConnectionModal = () => {
         setExposeModal?.(!exposeModal)
-        setTryingToConnect(true)
+        setTimeout(() => setTryingToConnect?.(true), 1000)
     }
 
 
@@ -117,6 +115,9 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
         setFlowRateArray(prev => [...prev, data.flowRate]);
         setTotalFlowArray(prev => [...prev, Math.round((data.totalFlow - startingFlow) * 100) / 100]);
     }, [data]);
+
+    console.log(tryingToConnect);
+    
 
     return (
         <View style={styles.container}>
