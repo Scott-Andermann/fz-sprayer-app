@@ -11,6 +11,7 @@ import RunJob from '../components/RunJob';
 import SaveConfirmModal from '../components/SaveConfirmModal';
 import SaveJob from '../components/SaveJob';
 import { darkGreen, gunmetal } from '../lib/colors';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface IProps {
     exposeModal: boolean,
@@ -134,8 +135,8 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                 <>
                     {connected ?
                         <>
-                            <View style={styles.heartRateTitleWrapper}>
-                                <Text style={styles.heartRateTitleText}>Job not started</Text>
+                            <View style={styles.titleWrapper}>
+                                <Text style={styles.titleText}>Job not started</Text>
                             </View>
                             <TouchableOpacity style={styles.ctaButton}
                                 onPress={startJob}>
@@ -147,18 +148,19 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                             </TouchableOpacity>
                         </>
                         :
-                        <View style={styles.heartRateTitleWrapper}>
+                        <View style={styles.titleWrapper}>
                             {tryingToConnect ?
                                 <>
-                                    <Text style={styles.heartRateTitleText}>Connecting...</Text>
+                                    <Text style={styles.titleText}>Connecting...</Text>
                                     <ActivityIndicator size='large' />
                                 </>
                                 :
                                 <>
-                                    <Text style={styles.heartRateTitleText}>Please connect to a sprayer</Text>
+                                    <Text style={styles.titleText}>Please connect to a sprayer</Text>
                                     <TouchableOpacity style={styles.ctaButton}
                                         onPress={openConnectionModal}>
-                                        <Text style={styles.ctaButtonText}>Connect</Text>
+                                            <Icon name='bluetooth-b' size={30} color='white' />
+                                        {/* <Text style={styles.ctaButtonText}>Connect</Text> */}
                                     </TouchableOpacity>
                                 </>
                             }
@@ -184,12 +186,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: gunmetal,
+        justifyContent: 'center'
     },
-    heartRateTitleWrapper: {
+    titleWrapper: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%'
     },
-    heartRateTitleText: {
+    titleText: {
         fontSize: 30,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -206,11 +211,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         // width: '80%',
-        height: 50,
+        height: 70,
+        width: 70,
         marginHorizontal: 20,
         marginTop: 20,
         marginBottom: 5,
-        borderRadius: 8,
+        borderRadius: 35,
     },
     ctaButtonText: {
         fontSize: 18,

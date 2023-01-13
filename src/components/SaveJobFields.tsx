@@ -1,49 +1,89 @@
-import React, {useState, Dispatch, SetStateAction} from 'react';
+import React, { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { lightGunmetal, gunmetal, rem, white } from '../lib/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 interface description {
     name: string,
     chemical: string,
     jobType: string,
-    notes: string
+    notes: string,
+    technician: string
 }
 
-const SaveJobFields = ({description, setDescription}: {description: description, setDescription: Dispatch<SetStateAction<any>>}) => {
+const SaveJobFields = ({ description, setDescription }: { description: description, setDescription: Dispatch<SetStateAction<any>> }) => {
 
     const handleNameChange = (e: string) => {
-        setDescription((prev: description) => ({...prev, name: e}))
+        setDescription((prev: description) => ({ ...prev, name: e }))
     }
     const handleTechChange = (e: string) => {
-        setDescription((prev: description) => ({...prev, technician: e}))
+        setDescription((prev: description) => ({ ...prev, technician: e }))
     }
     const handleTypeChange = (e: string) => {
-        setDescription((prev: description) => ({...prev, jobType: e}))
+        setDescription((prev: description) => ({ ...prev, jobType: e }))
     }
     const handleChemicalChange = (e: string) => {
-        setDescription((prev: description) => ({...prev, chemical: e}))
+        setDescription((prev: description) => ({ ...prev, chemical: e }))
     }
     const handleNotesChange = (e: string) => {
-        setDescription((prev: description) => ({...prev, notes: e}))
+        setDescription((prev: description) => ({ ...prev, notes: e }))
     }
 
+    const autofillFields = async () => {
+        const nameResult = await AsyncStorage.getItem('flowzoneName')
+        if (nameResult === null) {
+            return;
+        }
+        const prefixResult = await AsyncStorage.getItem('flowzonePrefix');
+        if (prefixResult === null) {
+            return;
+        }
+        const chemicalsResult = await AsyncStorage.getItem('flowzoneChemicals')
+        if (chemicalsResult === null) {
+            return;
+        }
+        setDescription((prev: description) => ({ ...prev, name: prefixResult, technician: nameResult }));
+    }
+
+    console.log(description);
 
 
-    return ( 
+    useEffect(() => {
+        autofillFields()
+    }, []);
+
+
+
+    return (
         //maybe this needs to be a scroll view?
         <SafeAreaView style={styles.container}>
-            <TextInput style={styles.inputField} placeholder='Customer Name' placeholderTextColor={lightGunmetal} value={description.name} onChangeText={handleNameChange}/>
-            <TextInput style={styles.inputField} placeholder='Technician' placeholderTextColor={lightGunmetal} onChangeText={handleTechChange}/>
-            <TextInput style={styles.inputField} placeholder='Job Type' placeholderTextColor={lightGunmetal} onChangeText={handleTypeChange}/>
-            <TextInput style={styles.inputField} placeholder='Chemical' placeholderTextColor={lightGunmetal} onChangeText={handleChemicalChange}/>
-            <TextInput style={styles.inputField} 
-                placeholder='Notes' 
+            <TextInput style={styles.inputField}
+                placeholder='Customer Name'
+                placeholderTextColor={lightGunmetal}
+                value={description.name}
+                onChangeText={handleNameChange} />
+            <TextInput style={styles.inputField}
+                placeholder='Technician'
+                placeholderTextColor={lightGunmetal}
+                value={description.technician}
+                onChangeText={handleTechChange} />
+            <TextInput style={styles.inputField}
+                placeholder='Job Type'
+                placeholderTextColor={lightGunmetal}
+                onChangeText={handleTypeChange} />
+            <TextInput style={styles.inputField}
+                placeholder='Chemical'
+                placeholderTextColor={lightGunmetal}
+                onChangeText={handleChemicalChange} />
+            <TextInput style={styles.inputField}
+                placeholder='Notes'
                 placeholderTextColor={lightGunmetal}
                 numberOfLines={3}
-                onChangeText={handleNotesChange}/>
+                onChangeText={handleNotesChange} />
         </SafeAreaView>
-     );
+    );
 }
 
 const styles = StyleSheet.create({
@@ -68,5 +108,5 @@ const styles = StyleSheet.create({
         color: gunmetal,
     }
 })
- 
+
 export default SaveJobFields;
