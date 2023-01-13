@@ -1127,6 +1127,11 @@
   dependencies:
     "merge-options" "^3.0.4"
 
+"@react-native-community/checkbox@^0.5.14":
+  "integrity" "sha512-UmGf3wBpoCXLmVRKIDZyzOG+QR1fOhm0FOw4KzxHTCXpsBvZgIn5wbJ+MWk4io5RohQdY8GSX2MYFmkPJeJpeA=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/checkbox/-/checkbox-0.5.14.tgz"
+  "version" "0.5.14"
+
 "@react-native-community/cli-clean@^8.0.4":
   "integrity" "sha512-IwS1M1NHg6+qL8PThZYMSIMYbZ6Zbx+lIck9PLBskbosFo24M3lCOflOl++Bggjakp6mR+sRXxLMexid/GeOsQ=="
   "resolved" "https://registry.npmjs.org/@react-native-community/cli-clean/-/cli-clean-8.0.4.tgz"
@@ -1568,6 +1573,14 @@
   "integrity" "sha512-ct8pmkh13s980Yj/cuxFdMJH3pi28/G5a+4DcZoPhIuHsmPadVOCDsfCh0E9PPFDfaZAK7sbK8zfjHCXNBygeQ=="
   "resolved" "https://registry.npmjs.org/@types/react-native-charts-wrapper/-/react-native-charts-wrapper-0.5.2.tgz"
   "version" "0.5.2"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native-check-box@^2.1.2":
+  "integrity" "sha512-FQJg++wp/zYEM/eyAy71SYKmQuHhITJjNHqNuCMmJI13y6uscC/YvCYjBEvOCdul7xkMhC2XuMuqE040ei1e6Q=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-check-box/-/react-native-check-box-2.1.2.tgz"
+  "version" "2.1.2"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"

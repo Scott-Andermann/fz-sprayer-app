@@ -4,14 +4,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import InputField from '../components/InputField';
 import { darkGreen } from '../lib/colors';
 import SelectListComponent from '../components/SelectListComponent';
+import ChemicalModal from '../components/ChemicalModal';
+
+interface chemicalObject {
+    key: number,
+    value: string
+}
 
 const AccountInfoScreen = () => {
 
     const [name, setName] = useState<string>('');
     const [prefix, setPrefix] = useState<string>('');
     // const [suffix, setSuffix] = useState<string>('');
-    const [chemicals, setChemicals] = useState<object[]>([]);
+    const [chemicals, setChemicals] = useState<chemicalObject[]>([]);
     const [newChemical, setNewChemical] = useState<string>('');
+    const [modal, setModal] = useState<boolean>(false);
 
     const storeAccountData = async () => {
         try {
@@ -28,7 +35,7 @@ const AccountInfoScreen = () => {
 
 
     const addKeyToArray = (data: string[]) => {
-        let dataWithKeys:object[] = []
+        let dataWithKeys:chemicalObject[] = []
         for(let i = 0; i < data.length; i++) {  
             dataWithKeys.push({key: i, value: data[i]})
         }
@@ -51,7 +58,7 @@ const AccountInfoScreen = () => {
             if (chemicalsResult === null) {
                 return;
             }
-            setChemicals(addKeyToArray(JSON.parse(chemicalsResult)));
+            setChemicals(JSON.parse(chemicalsResult));
         } catch (e) {
 
         }
@@ -65,11 +72,6 @@ const AccountInfoScreen = () => {
     }
     const handleNewChemicalChange = (e: string) => {
         setNewChemical(e);
-    }
-
-    const addChemical = () => {
-        setChemicals(prev => [...prev, {key: prev.length, value: newChemical}]);
-        setNewChemical('');
     }
 
     useEffect(() => {
@@ -92,15 +94,16 @@ const AccountInfoScreen = () => {
             {/* TOOD: put chemicals in a modal */}
             <SelectListComponent data={chemicals}/>
             <TouchableOpacity
-                onPress={addChemical}
+                onPress={() => setModal(true)}
                 style={styles.ctaButton}>
-                <Text style={styles.ctaButtonText}>Add Chemical</Text>
+                <Text style={styles.ctaButtonText}>Manage Chemicals</Text>
             </TouchableOpacity> 
             <TouchableOpacity
                 onPress={storeAccountData}
                 style={styles.ctaButton}>
                 <Text style={styles.ctaButtonText}>Save</Text>
             </TouchableOpacity> 
+            <ChemicalModal visible={modal} setVisible={setModal} chemicals={chemicals} setChemicals={setChemicals}/>
         </View>
     );
 }
