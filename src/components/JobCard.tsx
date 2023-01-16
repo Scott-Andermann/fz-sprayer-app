@@ -35,6 +35,7 @@ const JobCard = ({ timeArray, totalFlow, description, totalTime, startTime }: pr
                     <JobInfoField titleText='Date' value={startTime} />
                     <JobInfoField titleText='Time' value={totalTime} />
                     <JobInfoField titleText='Output' value={totalFlow[totalFlow.length - 1]} />
+                    {description.chemical.length > 1 && <JobInfoField titleText='Chemical' value={description.chemical} />}
                 </View>
                 <View style={styles.chartWrapper}>
                     <SummaryLineChart

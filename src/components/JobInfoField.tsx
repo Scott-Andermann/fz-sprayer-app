@@ -25,7 +25,7 @@ const JobInfoField = ({ titleText, value }: { titleText: string, value: string |
 
         return (
             <View>
-                <Text style={styles.jobInfoData}>{`${d.getMonth()+1}/${d.getDay()+1}/${d.getFullYear()}`}</Text>
+                <Text style={styles.jobInfoData}>{`${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`}</Text>
             </View>
         );
     }

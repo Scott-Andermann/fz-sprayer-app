@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Dispatch, SetStateAction} from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { rem, white, gunmetal, lightGunmetal } from '../lib/colors';
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -13,16 +13,16 @@ const addChemicalText = ({newChem}: {newChem: string}) => {
     )
 }
 
-const SelectListComponent = ({data}: {data: object[]}) => {
-
-    const [selected, setSelected] = useState<string>('');   
+const SelectListComponent = ({data, setChemical}: {data: object[], setChemical: Dispatch<SetStateAction<string>>}) => {
 
     return ( 
         <View style={{ width: '100%' }}>
             <SelectList
+                inputStyles={styles.inputStyles}
                 boxStyles={styles.dropdown}
                 dropdownStyles={styles.dropdownField}
-                setSelected={(val: string) => setSelected(val)}
+                dropdownTextStyles={styles.dropdownText}
+                setSelected={(val: string) => setChemical(val)}
                 data={data}
                 save='value'
                 notFoundText='No matches'
@@ -45,6 +45,12 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         color: gunmetal,
     },
+    inputStyles: {
+        color: gunmetal
+    },
+    dropdownText: {
+        color: gunmetal
+    },
     dropdown: {
         marginTop: 0.5 * rem,
         backgroundColor: white,
@@ -53,7 +59,8 @@ const styles = StyleSheet.create({
         paddingTop: 14,
         paddingBottom: 14,
         marginBottom: 8,
-        border: 'none'
+        border: 'none',
+        color: gunmetal,
     },
     dropdownField: {
         backgroundColor: white,
@@ -63,6 +70,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 3,
         marginTop: 0,
         marginBottom: 8,
+        color: gunmetal,
     }
 })
  

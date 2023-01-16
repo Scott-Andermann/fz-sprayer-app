@@ -3,6 +3,7 @@ import { StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { lightGunmetal, gunmetal, rem, white } from '../lib/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SelectListComponent from './SelectListComponent';
 
 
 interface description {
@@ -13,7 +14,15 @@ interface description {
     technician: string
 }
 
+interface chemicalObject {
+    key: number,
+    value: string
+}
+
 const SaveJobFields = ({ description, setDescription }: { description: description, setDescription: Dispatch<SetStateAction<any>> }) => {
+
+    const [chemicals, setChemicals] = useState<chemicalObject[]>([]);
+    const [newChemical, setNewChemical] = useState<string>('');
 
     const handleNameChange = (e: string) => {
         setDescription((prev: description) => ({ ...prev, name: e }))
@@ -24,12 +33,13 @@ const SaveJobFields = ({ description, setDescription }: { description: descripti
     const handleTypeChange = (e: string) => {
         setDescription((prev: description) => ({ ...prev, jobType: e }))
     }
-    const handleChemicalChange = (e: string) => {
-        setDescription((prev: description) => ({ ...prev, chemical: e }))
+    const handleChemicalChange = () => {
+        setDescription((prev: description) => ({ ...prev, chemical: newChemical }))
     }
     const handleNotesChange = (e: string) => {
         setDescription((prev: description) => ({ ...prev, notes: e }))
     }
+
 
     const autofillFields = async () => {
         const nameResult = await AsyncStorage.getItem('flowzoneName')
@@ -43,11 +53,18 @@ const SaveJobFields = ({ description, setDescription }: { description: descripti
         const chemicalsResult = await AsyncStorage.getItem('flowzoneChemicals')
         if (chemicalsResult === null) {
             return;
+        } else {
+            setChemicals(JSON.parse(chemicalsResult));
         }
+
         setDescription((prev: description) => ({ ...prev, name: prefixResult, technician: nameResult }));
     }
 
     console.log(description);
+
+    useEffect(() => {
+        handleChemicalChange()
+    }, [newChemical]);
 
 
     useEffect(() => {
@@ -73,10 +90,8 @@ const SaveJobFields = ({ description, setDescription }: { description: descripti
                 placeholder='Job Type'
                 placeholderTextColor={lightGunmetal}
                 onChangeText={handleTypeChange} />
-            <TextInput style={styles.inputField}
-                placeholder='Chemical'
-                placeholderTextColor={lightGunmetal}
-                onChangeText={handleChemicalChange} />
+            <SelectListComponent data={chemicals}
+                setChemical={setNewChemical} />
             <TextInput style={styles.inputField}
                 placeholder='Notes'
                 placeholderTextColor={lightGunmetal}
