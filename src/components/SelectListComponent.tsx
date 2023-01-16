@@ -15,20 +15,7 @@ const addChemicalText = ({newChem}: {newChem: string}) => {
 
 const SelectListComponent = ({data}: {data: object[]}) => {
 
-    const [selected, setSelected] = useState<string>('');
-
-    // const addKeyToDataArray = (data: string[]) => {
-    //     for(let i = 0; i < data.length; i++) {  
-    //         setDataWithKeys(prev => [...prev, {key: i, value: data[i]}])
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     addKeyToDataArray(data)
-    // }, [data]);
-
-    // console.log(dataWithKeys);
-    
+    const [selected, setSelected] = useState<string>('');   
 
     return ( 
         <View style={{ width: '100%' }}>

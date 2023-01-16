@@ -20,13 +20,12 @@ interface props {
   data: any,
   saveJob: any,
   totalTime: number,
-  startingFlow: number,
   description: any,
   setDescription: Dispatch<SetStateAction<any>>,
   setConfirmModal: Dispatch<SetStateAction<boolean>>,
 }
 
-const SaveJob = ({ saveModal, setSaveModal, data, saveJob, totalTime, startingFlow, description, setDescription, setConfirmModal }: props) => {
+const SaveJob = ({ saveModal, setSaveModal, data, saveJob, totalTime, description, setDescription, setConfirmModal }: props) => {
 
   // const [confirmModal, setConfirmModal] = useState<boolean>(false);
 
@@ -39,7 +38,7 @@ const SaveJob = ({ saveModal, setSaveModal, data, saveJob, totalTime, startingFl
       <ScrollView style={modalStyle.modalContainer}>
         <SafeAreaView style={modalStyle.dataContainer}>
           <SaveJobFields description={description} setDescription={setDescription} />
-          <RunJob data={data} totalTime={totalTime} startingFlow={startingFlow} />
+          <RunJob totalTime={totalTime} />
         </SafeAreaView>
         <TouchableOpacity
           onPress={() => setConfirmModal(true)}

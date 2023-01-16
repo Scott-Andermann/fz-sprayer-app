@@ -8,26 +8,27 @@ import {
 } from 'react-native';
 import { convertToMins } from '../lib';
 import { gunmetal, white } from '../lib/colors';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 
 interface props {
-    data: any,
     totalTime: number,
-    startingFlow: number
 }
 
-const RunJob = ({data, totalTime, startingFlow}: props) => {
+const RunJob = ({totalTime}: props) => {
+
+    const data = useAppSelector((state) => state.data);
 
     return ( 
         <>
-        <View style={styles.heartRateTitleWrapper}>
-            <Text style={styles.heartRateTitleText}>Flow Rate:</Text>
+        <View style={styles.titleWrapper}>
+            <Text style={styles.titleText}>Flow Rate:</Text>
             <Text style={styles.dataText}>{data.flowRate} LPM</Text>
-            <Text style={styles.heartRateTitleText}>Total Output:</Text>
+            <Text style={styles.titleText}>Total Output:</Text>
             {/* TODO: change data.totalFlow to reflect if a new job is started and the unit is not turned off */}
-            <Text style={styles.dataText}>{Math.round((data.totalFlow - startingFlow) * 100) / 100} Liters</Text> 
-            <Text style={styles.heartRateTitleText}>Time spraying:</Text>
-            <Text style={styles.dataText}>{convertToMins(data.spraySeconds)} Seconds</Text>
-            <Text style={styles.heartRateTitleText}>Job Length:</Text>
+            <Text style={styles.dataText}>{Math.round((data.totalFlow - data.startingFlow) * 100) / 100} Liters</Text> 
+            <Text style={styles.titleText}>Time spraying:</Text>
+            <Text style={styles.dataText}>{convertToMins(data.spraySeconds - data.offset)} Seconds</Text>
+            <Text style={styles.titleText}>Job Length:</Text>
             <Text style={styles.dataText}>{totalTime === 0 ? convertToMins(0) : convertToMins(Math.round(totalTime))} Seconds</Text>
         </View>
     </>
@@ -39,12 +40,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: gunmetal,
     },
-    heartRateTitleWrapper: {
+    titleWrapper: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    heartRateTitleText: {
+    titleText: {
         fontSize: 30,
         fontWeight: 'bold',
         textAlign: 'center',

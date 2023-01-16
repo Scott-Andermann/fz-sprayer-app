@@ -11,22 +11,28 @@ import RunJob from '../components/RunJob';
 import SaveConfirmModal from '../components/SaveConfirmModal';
 import SaveJob from '../components/SaveJob';
 import { darkGreen, gunmetal } from '../lib/colors';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import RoundButton from '../components/RoundButton';
+import StandardButton from '../components/StandardButton';
+import {setTrue, setFalse} from '../redux/slicers/tryingToConnectSlice';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { resetData, setInitial } from '../redux/slicers/dataSlice';
+
 
 interface IProps {
     exposeModal: boolean,
     setExposeModal?: Dispatch<SetStateAction<boolean>>,
     setSpraySeconds?: Dispatch<SetStateAction<number>>,
-    data: any,
-    connected: boolean,
     disconnectFromDevice: any,
-    setTryingToConnect?: Dispatch<SetStateAction<boolean>>,
-    tryingToConnect: boolean
 }
 
-const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds, setTryingToConnect, tryingToConnect }: IProps) => {
+const NewJobScreen = ({ exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds }: IProps) => {
     // const [currentTime, setCurrentTime] = useState<number>(0);
     // const [startTime, setStartTime] = useState<number>(0);
+    const data = useAppSelector((state) => state.data)
+    const connected = useAppSelector((state) => state.connected.value);
+    const tryingToConnect = useAppSelector((state) => state.tryingToConnect.value);
+    const dispatch = useAppDispatch();
+
     const [totalTime, setTotalTime] = useState<number>(0);
     const [timeArray, setTimeArray] = useState<number[]>([]);
     const [flowRateArray, setFlowRateArray] = useState<number[]>([]);
@@ -35,7 +41,6 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
     const [started, setStarted] = useState<boolean>(false);
     const [saveModal, setSaveModal] = useState<boolean>(false);
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
-    // const [tryingToConnect, setTryingToConnect] = useState<boolean>(false);
     const [description, setDescription] = useState<{ name: string, notes: string, jobType: string, chemical: string, technician: string }>({
         name: '',
         notes: '',
@@ -43,6 +48,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
         chemical: '',
         technician: ''
     });
+
 
     const exposeSaveModal = () => {
         setSaveModal(true);
@@ -76,18 +82,21 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
         setTotalTime(0);
         setSaveModal(false);
         setConfirmModal(false);
-        setSpraySeconds?.(0);
-        setStartingFlow(data.totalFlow);
+        dispatch(resetData({startingFlow: data.totalFlow, offset: data.spraySeconds}));
+        // setSpraySeconds?.(0);
+        // setStartingFlow(data.totalFlow);
     }
 
     const startJob = () => {
-        setStartingFlow(data.totalFlow);
+        // setStartingFlow(data.totalFlow);
+        dispatch(setInitial(data.totalFlow));
+        dispatch(resetData({startingFlow: data.totalFlow, offset: data.spraySeconds}));
         setTimeout(() => setStarted(true), 1000);
     }
 
     const disconnect = () => {
         disconnectFromDevice();
-        setTryingToConnect?.(false);
+        dispatch(setFalse());
     }
 
     const tick = () => {
@@ -99,7 +108,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
 
     const openConnectionModal = () => {
         setExposeModal?.(!exposeModal)
-        setTimeout(() => setTryingToConnect?.(true), 1000)
+        setTimeout(() => dispatch(setTrue()), 1000)
     }
 
 
@@ -114,22 +123,18 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
         const time = new Date().getTime();
         setTimeArray(prev => [...prev, time]);
         setFlowRateArray(prev => [...prev, data.flowRate]);
-        setTotalFlowArray(prev => [...prev, Math.round((data.totalFlow - startingFlow) * 100) / 100]);
+        setTotalFlowArray(prev => [...prev, Math.round((data.totalFlow - data.startingFlow) * 100) / 100]);
     }, [data]);
 
-    console.log(tryingToConnect);
+    console.log('redux data: ', data);
     
 
     return (
         <View style={styles.container}>
             {started ?
                 <>
-                    <RunJob data={data} totalTime={totalTime} startingFlow={startingFlow} />
-                    <TouchableOpacity
-                        style={styles.ctaButton}
-                        onPress={exposeSaveModal}>
-                        <Text style={styles.ctaButtonText}>Save Job</Text>
-                    </TouchableOpacity>
+                    <RunJob totalTime={totalTime} />
+                    <StandardButton text='Save Job' onPress={exposeSaveModal} />
                 </>
                 :
                 <>
@@ -138,14 +143,8 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                             <View style={styles.titleWrapper}>
                                 <Text style={styles.titleText}>Job not started</Text>
                             </View>
-                            <TouchableOpacity style={styles.ctaButton}
-                                onPress={startJob}>
-                                <Text style={styles.ctaButtonText}>Start Job</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.ctaButton}
-                                onPress={disconnect}>
-                                <Text style={styles.ctaButtonText}>Disconnect from sprayer</Text>
-                            </TouchableOpacity>
+                            <StandardButton text='Start Job' onPress={startJob} />
+                            <StandardButton text='Disconnect from Sprayer' onPress={disconnect} />
                         </>
                         :
                         <View style={styles.titleWrapper}>
@@ -157,11 +156,7 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                                 :
                                 <>
                                     <Text style={styles.titleText}>Please connect to a sprayer</Text>
-                                    <TouchableOpacity style={styles.ctaButton}
-                                        onPress={openConnectionModal}>
-                                            <Icon name='bluetooth-b' size={30} color='white' />
-                                        {/* <Text style={styles.ctaButtonText}>Connect</Text> */}
-                                    </TouchableOpacity>
+                                    <RoundButton iconType='bluetooth-b' action={openConnectionModal}/>
                                 </>
                             }
                         </View>
@@ -173,7 +168,6 @@ const NewJobScreen = ({ data, connected, exposeModal, setExposeModal, disconnect
                 data={data}
                 saveJob={saveJob}
                 totalTime={totalTime}
-                startingFlow={startingFlow}
                 description={description}
                 setDescription={setDescription}
                 setConfirmModal={setConfirmModal} />

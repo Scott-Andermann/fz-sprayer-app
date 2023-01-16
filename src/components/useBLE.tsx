@@ -99,13 +99,7 @@ function useBLE(): BluetoothLowEnergyApi {
     });
 
   const connectToDevice = async (device: Device) => {
-    try {
-      // if (device){
-      //   const uuid = device['serviceUUIDs'];
-      //   console.log(uuid[0]);
-      //   ;
-      // }
-      
+    try {   
       const deviceConnection = await bleManager.connectToDevice(device.id);
       setConnectedDevice(deviceConnection);
       const allSvcAndChar = await deviceConnection.discoverAllServicesAndCharacteristics();
@@ -128,7 +122,7 @@ function useBLE(): BluetoothLowEnergyApi {
     }
   };
 
-  const onHeartRateUpdate = (
+  const onFlowUpdate = (
     error: BleError | null,
     characteristic: Characteristic | null,
   ) => {
@@ -167,7 +161,7 @@ function useBLE(): BluetoothLowEnergyApi {
         SERVICE_UUID,
         CHARACTERISTIC_UUID,
 
-        (error, characteristic) => onHeartRateUpdate(error, characteristic),
+        (error, characteristic) => onFlowUpdate(error, characteristic),
       );
             
     } else {

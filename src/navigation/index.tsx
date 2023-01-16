@@ -34,30 +34,24 @@ interface IProps {
   exposeModal: boolean,
   setExposeModal?: Dispatch<SetStateAction<boolean>>,
   setSpraySeconds?: Dispatch<SetStateAction<number>>,
-  data: any,
-  connected: boolean,
   disconnectFromDevice: any,
-  tryingToConnect: boolean,
-  setTryingToConnect?: Dispatch<SetStateAction<boolean>>,
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-export const RootNavigator = ({exposeModal, setExposeModal, data, connected, disconnectFromDevice, setSpraySeconds, tryingToConnect, setTryingToConnect}: IProps) => (
+
+export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds}: IProps) => (
     <NavigationContainer theme={appTheme}>
       <Stack.Navigator screenOptions={{presentation: 'card'}}>
         <Stack.Screen name="Home" component={Home} />
         {/* <Stack.Screen name="Job" component={Home} /> */}
         <Stack.Screen name="Job" options={{title: 'Job'}}>
-          {(props) => <NewJobScreen {...props} 
-              data={data} 
-              connected={connected} 
+          {(props) => <NewJobScreen {...props}  
+              // connected={connected} 
               setExposeModal={setExposeModal} 
               exposeModal={exposeModal} 
               disconnectFromDevice={disconnectFromDevice} 
-              setSpraySeconds={setSpraySeconds}
-              tryingToConnect={tryingToConnect}
-              setTryingToConnect={setTryingToConnect}/>}
+              setSpraySeconds={setSpraySeconds}/>}
         </Stack.Screen>
         <Stack.Screen name="History" options={{title: 'Job History'}} component={JobListScreen} />
         <Stack.Screen name="Account" options={{title: 'Account Info'}} component={AccountInfoScreen} />

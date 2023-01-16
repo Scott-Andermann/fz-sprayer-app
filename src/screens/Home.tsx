@@ -1,22 +1,24 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
-    Button,
-    SafeAreaView,
     StyleSheet,
-    Text,
-    TouchableOpacity,
     View,
     Image,
     Linking,
     Alert,
+    Text,
 } from 'react-native';
-import SaveConfirmModal from '../components/SaveConfirmModal';
 import { darkGreen, gunmetal } from '../lib/colors';
 // import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 // import {faMugSaucer} from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import RoundButton from '../components/RoundButton';
+import { decrement, increment } from '../redux/slicers/counterSlice';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 
 const Home = ({ navigation }:{navigation: any}) => {
+
+    const count = useAppSelector((state) => state.counter.value)
+    const dispatch = useAppDispatch();
 
     const url = 'https://fzspray.com/'
 
@@ -37,39 +39,10 @@ const Home = ({ navigation }:{navigation: any}) => {
             </View>
             <View style={styles.spacer}></View>
             <View style={styles.buttonContainer}>
-
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate('Job')}>
-                    {/* <Text style={styles.buttonText}>
-                        New Job
-                    </Text> */}
-                    <Icon name="shower" size={40} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate('History')}>
-                    {/* <Text style={styles.buttonText}>
-                        Job List
-                    </Text> */}
-                    <Icon name="list-ul" size={40} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate('Account')}>
-                        <Icon name="user" size={40} color="white" />
-                    {/* <Text style={styles.buttonText}>
-                        Account Info
-                    </Text> */}
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={openStoreLink}>
-                        <Icon name="shopping-cart" size={40} color="white" />
-                    {/* <Text style={styles.buttonText}>
-                        Account Info
-                    </Text> */}
-                </TouchableOpacity>
+                <RoundButton iconType='shower' action={() => navigation.navigate('Job')}/>
+                <RoundButton iconType='list-ul' action={() => navigation.navigate('History')} />
+                <RoundButton iconType='user' action={() => navigation.navigate('Account')} />
+                <RoundButton iconType='shopping-cart' action={openStoreLink} />
             </View>
         </View>
     );
