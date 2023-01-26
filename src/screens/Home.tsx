@@ -42,6 +42,7 @@ const Home = ({ navigation }:{navigation: any}) => {
                 <RoundButton iconType='list-ul' action={() => navigation.navigate('History')} />
                 <RoundButton iconType='user' action={() => navigation.navigate('Account')} />
                 <RoundButton iconType='shopping-cart' action={openStoreLink} />
+                <RoundButton iconType='map' action={() => navigation.navigate('Map')} />
             </View>
         </View>
     );

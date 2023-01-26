@@ -6,6 +6,7 @@ import NewJobScreen from '../screens/NewJobScreen';
 import { Device } from 'react-native-ble-plx';
 import JobListScreen from '../screens/JobListScreen';
 import AccountInfoScreen from '../screens/AccountInfoScreen';
+import MapScreen from '../screens/MapScreen';
 import { gunmetal, lightGreen, lightGunmetal, white, red, darkGreen } from '../lib/colors';
 import HeaderConnection from '../components/HeaderConnection';
 
@@ -30,6 +31,7 @@ export type RootStackParamList = {
   Job: undefined;
   History: undefined;
   Account: undefined;
+  Map: undefined;
   Device: { device: Device };
 };
 
@@ -66,6 +68,7 @@ export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice
         </Stack.Screen>
         <Stack.Screen name="History" options={{title: 'Job History', headerTitle: () => <HeaderConnection title='Job History' />}} component={JobListScreen} />
         <Stack.Screen name="Account" options={{title: 'Account Info', headerTitle: () => <HeaderConnection title='Account' />}} component={AccountInfoScreen} />
+        <Stack.Screen name="Map" options={{title: 'Map', headerTitle: () => <HeaderConnection title='Map' />}} component={MapScreen} />
         {/* <Stack.Screen name='Connect' > */}
           {/* {(props) => <ConnectScreen {...props} exposeModal={exposeModal} setExposeModal={setExposeModal}/>} */}
         {/* </Stack.Screen> */}
