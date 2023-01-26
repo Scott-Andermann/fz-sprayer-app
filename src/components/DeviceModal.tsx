@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback } from 'react';
 import {
   FlatList,
   ListRenderItemInfo,
@@ -31,14 +31,14 @@ const DeviceModalListItem: FC<DeviceModalListItemProps> = props => {
   const { item, connectToPeripheral, closeModal } = props;
 
   const makeConnection = async () => {
-    setTimeout(() => connectToPeripheral(item.item), 3000);
+    setTimeout(() => connectToPeripheral(item.item), 1000);
   }
 
   const connectAndCloseModal = useCallback(async () => {
     await makeConnection();
     // connectToPeripheral(item.item);
     await closeModal();
-  }, [closeModal, connectToPeripheral, item.item]);  
+  }, [closeModal, connectToPeripheral, item.item]);
 
   return (
     <TouchableOpacity
@@ -77,11 +77,13 @@ const DeviceModal: FC<DeviceModalProps> = props => {
         <Text style={modalStyle.modalTitleText}>
           Tap on a device to connect
         </Text>
-        <FlatList
-          contentContainerStyle={modalStyle.modalFlatlistContainer}
-          data={devices}
-          renderItem={renderDeviceModalListItem}
-        />
+        {devices.length === 0 ? <ActivityIndicator size="large" /> :
+          <FlatList
+            contentContainerStyle={modalStyle.modalFlatlistContainer}
+            data={devices}
+            renderItem={renderDeviceModalListItem}
+          />
+        }
         <TouchableOpacity
           onPress={cancelModal}
           style={modalStyle.ctaButton}>

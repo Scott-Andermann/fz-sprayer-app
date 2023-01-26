@@ -39,7 +39,7 @@ def convert_to_mins(seconds):
     return f'{minutes}:{seconds_string}'
 
 def db_query(page, num_results, connection):
-    get_job_query = """SELECT * FROM jobs WHERE userID = %s ORDER BY uploadTime ASC LIMIT %s, %s;"""
+    get_job_query = """SELECT * FROM jobs WHERE userID = %s ORDER BY uploadTime DESC LIMIT %s, %s;"""
     val_tuple = ('user1', page * 3, num_results)
     print(val_tuple)
     with connection.cursor() as cursor:

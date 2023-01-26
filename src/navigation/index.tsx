@@ -7,6 +7,9 @@ import { Device } from 'react-native-ble-plx';
 import JobListScreen from '../screens/JobListScreen';
 import AccountInfoScreen from '../screens/AccountInfoScreen';
 import { gunmetal, lightGreen, lightGunmetal, white, red, darkGreen } from '../lib/colors';
+import HeaderConnection from '../components/HeaderConnection';
+
+import {View, Text} from 'react-native';
 
 
 const appTheme ={
@@ -39,13 +42,21 @@ interface IProps {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+function HeaderLogo() {
+  return (
+    <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'}}>
+      <Text style={{color: 'white', padding: 5, fontSize: 22}}></Text>
+    </View>
+  );
+}
+
 
 export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds}: IProps) => (
     <NavigationContainer theme={appTheme}>
       <Stack.Navigator screenOptions={{presentation: 'card'}}>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Home" component={Home} options={{headerTitle: () => <HeaderConnection title='Home' />}} />
         {/* <Stack.Screen name="Job" component={Home} /> */}
-        <Stack.Screen name="Job" options={{title: 'Job'}}>
+        <Stack.Screen name="Job" options={{title: 'Job', headerTitle: () => <HeaderConnection title='Job' />}}>
           {(props) => <NewJobScreen {...props}  
               // connected={connected} 
               setExposeModal={setExposeModal} 
@@ -53,8 +64,8 @@ export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice
               disconnectFromDevice={disconnectFromDevice} 
               setSpraySeconds={setSpraySeconds}/>}
         </Stack.Screen>
-        <Stack.Screen name="History" options={{title: 'Job History'}} component={JobListScreen} />
-        <Stack.Screen name="Account" options={{title: 'Account Info'}} component={AccountInfoScreen} />
+        <Stack.Screen name="History" options={{title: 'Job History', headerTitle: () => <HeaderConnection title='Job History' />}} component={JobListScreen} />
+        <Stack.Screen name="Account" options={{title: 'Account Info', headerTitle: () => <HeaderConnection title='Account' />}} component={AccountInfoScreen} />
         {/* <Stack.Screen name='Connect' > */}
           {/* {(props) => <ConnectScreen {...props} exposeModal={exposeModal} setExposeModal={setExposeModal}/>} */}
         {/* </Stack.Screen> */}

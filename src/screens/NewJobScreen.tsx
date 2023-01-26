@@ -36,9 +36,9 @@ const NewJobScreen = ({ exposeModal, setExposeModal, disconnectFromDevice, setSp
     const [totalTime, setTotalTime] = useState<number>(0);
     const [timeArray, setTimeArray] = useState<number[]>([]);
     const [flowRateArray, setFlowRateArray] = useState<number[]>([]);
-    const [startingFlow, setStartingFlow] = useState<number>(data.totalFlow);
     const [totalFlowArray, setTotalFlowArray] = useState<number[]>([]);
     const [started, setStarted] = useState<boolean>(false);
+    const [starting, setStarting] = useState<boolean>(false);
     const [saveModal, setSaveModal] = useState<boolean>(false);
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
     const [description, setDescription] = useState<{ name: string, notes: string, jobType: string, chemical: string, technician: string }>({
@@ -91,7 +91,8 @@ const NewJobScreen = ({ exposeModal, setExposeModal, disconnectFromDevice, setSp
         // setStartingFlow(data.totalFlow);
         dispatch(setInitial(data.totalFlow));
         dispatch(resetData({startingFlow: data.totalFlow, offset: data.spraySeconds}));
-        setTimeout(() => setStarted(true), 1000);
+        setStarting(true);
+        setTimeout(() => setStarted(true), 2000);
     }
 
     const disconnect = () => {
@@ -110,7 +111,6 @@ const NewJobScreen = ({ exposeModal, setExposeModal, disconnectFromDevice, setSp
         setExposeModal?.(!exposeModal)
         setTimeout(() => dispatch(setTrue()), 1000)
     }
-
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -138,6 +138,13 @@ const NewJobScreen = ({ exposeModal, setExposeModal, disconnectFromDevice, setSp
                 </>
                 :
                 <>
+                    {starting ? 
+                        <View style={styles.titleWrapper}>
+                            <Text style={styles.titleText}>Starting</Text>
+                            <ActivityIndicator size='large' />
+                        </View>   
+                    :
+                    <>
                     {connected ?
                         <>
                             <View style={styles.titleWrapper}>
@@ -161,6 +168,8 @@ const NewJobScreen = ({ exposeModal, setExposeModal, disconnectFromDevice, setSp
                             }
                         </View>
                     }
+                    </>
+                }
                 </>
             }
             <SaveJob saveModal={saveModal}

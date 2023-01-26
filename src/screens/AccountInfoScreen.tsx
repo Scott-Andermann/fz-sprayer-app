@@ -70,9 +70,6 @@ const AccountInfoScreen = () => {
     const handlePrefixChange = (e: string) => {
         setPrefix(e);
     }
-    const handleNewChemicalChange = (e: string) => {
-        setNewChemical(e);
-    }
 
     useEffect(() => {
         getData()
@@ -92,7 +89,7 @@ const AccountInfoScreen = () => {
                 placeholder='Job Name Prefix' 
                 onChangeText={handlePrefixChange} />
             {/* TOOD: put chemicals in a modal */}
-            <SelectListComponent data={chemicals}/>
+            <SelectListComponent data={chemicals} setChemical={setNewChemical}/>
             <TouchableOpacity
                 onPress={() => setModal(true)}
                 style={styles.ctaButton}>

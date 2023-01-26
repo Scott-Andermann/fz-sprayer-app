@@ -11,7 +11,7 @@ import { useAppDispatch } from '../redux/hooks';
 import { connect, disconnect } from '../redux/slicers/connectedSlice';
 import { setTrue, setFalse } from '../redux/slicers/tryingToConnectSlice';
 import { setAllData } from '../redux/slicers/dataSlice';
-import DeviceModal from './DeviceConnectionModal';
+import DeviceModal from './DeviceModal';
 import useBLE from './useBLE';
 
 

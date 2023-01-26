@@ -18,7 +18,6 @@ import { useAppSelector, useAppDispatch } from '../redux/hooks';
 const Home = ({ navigation }:{navigation: any}) => {
 
     const count = useAppSelector((state) => state.counter.value)
-    const dispatch = useAppDispatch();
 
     const url = 'https://fzspray.com/'
 
@@ -99,5 +98,6 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 })
+
 
 export default Home;
