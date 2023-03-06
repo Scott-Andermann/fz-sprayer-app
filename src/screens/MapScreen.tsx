@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import MapBoxGL from '@react-native-mapbox-gl/maps';
+// import MapBoxGL from '@react-native-mapbox-gl/maps';
 
 
 const MapScreen = () => {
     const [coordinates] = useState([78.9629, 20.5937]);
-    MapBoxGL.setAccessToken('pk.eyJ1Ijoic2FuZGVybWFubjciLCJhIjoiY2xkZDlia2hpMDFmbzN3azZ5dWJnNzQ1MSJ9.99MLFLdINkY9VgLsAv_GbA');
+    // MapBoxGL.setAccessToken('pk.eyJ1Ijoic2FuZGVybWFubjciLCJhIjoiY2xkZDlia2hpMDFmbzN3azZ5dWJnNzQ1MSJ9.99MLFLdINkY9VgLsAv_GbA');
 
     useEffect(() => {
         // MUST HAVE FINE_LOCATION_PERMISSION ENABLED
@@ -23,13 +23,13 @@ const MapScreen = () => {
     return ( 
          <View style={styles.page}>
             <View style={styles.container}>
-              <MapBoxGL.MapView style={styles.map}>
+              {/* <MapBoxGL.MapView style={styles.map}>
                 <MapBoxGL.Camera
                   zoomLevel={4}
                   centerCoordinate={coordinates}
                 />
-                {/* <MapBoxGL.PointAnnotation coordinate={coordinates} /> */}
-              </MapBoxGL.MapView>
+                <MapBoxGL.PointAnnotation coordinate={coordinates} />
+              </MapBoxGL.MapView> */}
             </View>
           </View>
         );

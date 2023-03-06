@@ -30,7 +30,7 @@ build/
 local.properties
 *.iml
 *.hprof
-*.properties
+gradle.properties
 
 # node.js
 #
