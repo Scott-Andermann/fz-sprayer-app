@@ -7,6 +7,7 @@ import {
     StyleSheet,
     FlatList,
 } from 'react-native'
+import Footer from '../components/Footer';
 import JobCard from '../components/JobCard';
 import JobListFooter from '../components/JobListFooter';
 import { darkGreen, gunmetal } from '../lib/colors';
@@ -26,7 +27,7 @@ interface element {
     startTime: number
 }
 
-const JobListScreen = () => {
+const JobListScreen = ({navigation}: {navigation: any}) => {
     // TODO: on mount ping server for latest 5 jobs and show info
     // TODO: create job card to extend
     // TODO: call api again on scroll
@@ -76,6 +77,7 @@ const JobListScreen = () => {
                 disabled={end}>
                 <Text style={end ? {...styles.buttonText, ...styles.buttonTextDisabled} : {...styles.buttonText, ...styles.buttonTextActive}}>Load More</Text>
             </TouchableOpacity> */}
+            <Footer screen='history' navigation={navigation}/>
         </View>
     );
 }

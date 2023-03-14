@@ -13,6 +13,7 @@ import { setTrue, setFalse } from '../redux/slicers/tryingToConnectSlice';
 import { setAllData } from '../redux/slicers/dataSlice';
 import DeviceModal from './DeviceModal';
 import useBLE from './useBLE';
+import Location from './Location';
 
 
 const BLEWrapper = () => {
@@ -77,10 +78,12 @@ const BLEWrapper = () => {
     useEffect(() => {
         createData()
     }, [flowRate]);
+
     
 
     return (
         <>
+            <Location requestPermissions={requestPermissions} />
             <RootNavigator exposeModal={exposeModal} 
                 setExposeModal={setExposeModal} 
                 disconnectFromDevice={disconnectFromDevice} 

@@ -58,6 +58,8 @@ function useBLE(): BluetoothLowEnergyApi {
             buttonPositive: 'OK',
           },
         );
+        console.log(granted);
+        
         cb(granted === PermissionsAndroid.RESULTS.GRANTED);
       } else {
         const result = await requestMultiple([
@@ -185,6 +187,8 @@ function useBLE(): BluetoothLowEnergyApi {
   const startStreamingData = async (device: Device) => {
 
     // const services = await device.services();
+    // console.log(services);
+    
     // const service = services.filter(service => service.uuid === SERVICE_UUID)
     // const characteristics = await service[0].characteristics();
     // console.log(characteristics);

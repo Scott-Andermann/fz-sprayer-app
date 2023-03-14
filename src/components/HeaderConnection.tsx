@@ -9,10 +9,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const HeaderConnection = ({ title }: { title: string }) => {
 
     const connected = useAppSelector((state) => state.connected.value)
+    const location = useAppSelector((state) => state.location.longitude);
+
+    console.log(location);
+    
 
     return (
         <View style={styles.headerWrapper}>
             <Text style={styles.titleText}>{title}</Text>
+            {location === 0 ? 
+            <Text>GPS not ready</Text> : 
+            <Text>GPS Ready</Text>}
             {connected ?
                 <View style={styles.connectedWrapper}>
                     <Text style={{ color: 'white' }}>Connected</Text>

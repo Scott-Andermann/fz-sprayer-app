@@ -14,10 +14,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RoundButton from '../components/RoundButton';
 import { decrement, increment } from '../redux/slicers/counterSlice';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import Footer from '../components/Footer';
 
 const Home = ({ navigation }:{navigation: any}) => {
 
     const count = useAppSelector((state) => state.counter.value)
+    const location = useAppSelector((state) => state.location);
 
     const url = 'https://fzspray.com/'
 
@@ -37,13 +39,14 @@ const Home = ({ navigation }:{navigation: any}) => {
                     source={require('../assets/fzlogo.png')} />
             </View>
             <View style={styles.spacer}></View>
-            <View style={styles.buttonContainer}>
+            {/* <View style={styles.buttonContainer}>
                 <RoundButton iconType='shower' action={() => navigation.navigate('Job')}/>
                 <RoundButton iconType='list-ul' action={() => navigation.navigate('History')} />
                 <RoundButton iconType='user' action={() => navigation.navigate('Account')} />
                 <RoundButton iconType='shopping-cart' action={openStoreLink} />
-                <RoundButton iconType='map' action={() => navigation.navigate('Map')} />
-            </View>
+            </View> */}
+            {/* <Text>Location: ({location.latitude}, {location.longitude})</Text> */}
+            <Footer screen='home' navigation={navigation}/>
         </View>
     );
 }

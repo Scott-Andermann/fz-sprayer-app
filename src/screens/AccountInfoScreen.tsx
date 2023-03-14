@@ -5,13 +5,14 @@ import InputField from '../components/InputField';
 import { darkGreen } from '../lib/colors';
 import SelectListComponent from '../components/SelectListComponent';
 import ChemicalModal from '../components/ChemicalModal';
+import Footer from '../components/Footer';
 
 interface chemicalObject {
     key: number,
     value: string
 }
 
-const AccountInfoScreen = () => {
+const AccountInfoScreen = ({navigation}: {navigation: any}) => {
 
     const [name, setName] = useState<string>('');
     const [prefix, setPrefix] = useState<string>('');
@@ -101,13 +102,15 @@ const AccountInfoScreen = () => {
                 <Text style={styles.ctaButtonText}>Save</Text>
             </TouchableOpacity> 
             <ChemicalModal visible={modal} setVisible={setModal} chemicals={chemicals} setChemicals={setChemicals}/>
+            <Footer screen='profile' navigation={navigation}/>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10
+        padding: 10,
+        height: '100%',
     },
     ctaButton: {
         backgroundColor: darkGreen,
