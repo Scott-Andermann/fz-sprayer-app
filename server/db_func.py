@@ -102,6 +102,24 @@ def get_jobs_from_db(page):
     except Error as e:
         print(e)
 
+def check_login(email, password):
+    with connect(
+        host='localhost',
+        user='root',
+        password=get_password(),
+        database='flowzone_app'
+    ) as connection:
+        query = """select * from users where email = %s and encryptedPassword = %s"""
+        val_tuple = (email, password)
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute(query, val_tuple)
+                result = cursor.fetchall()
+                
+                return result[0]
+            except IndexError:
+                return False
+        # return db_query(page, 3, connection)
 
 if __name__ == '__main__':
     print(get_password())

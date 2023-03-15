@@ -2,7 +2,7 @@ first start the virtual environment
 venv/Scripts/activate
 
 then run:
-python -m flask --app server.py --debuggger
+python -m flask --app server.py --debug run
 
 to expose 5000 port use after the emulator is running or peripheral is plugged in: 
 adb reverse tcp:5000 tcp:5000

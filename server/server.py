@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 from flask_cors import cross_origin
 import json
 import boto3
-from db_func import add_job, get_jobs_from_db
+from db_func import add_job, get_jobs_from_db, check_login
 
 app = Flask(__name__)
 
@@ -37,3 +37,25 @@ def get_jobs():
     print(args.get('page'))
     result = get_jobs_from_db(int(args.get('page')))        
     return result
+
+@app.route('/login', methods=['POST'])
+@cross_origin()
+def login():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        print(data)
+        email = data['email']
+        password = data['password']
+        result = check_login(email, password)
+        if result == False:
+            response_body = {
+                "status": "Failed",
+            }
+            # print('failed')
+            # print(email, password)
+        else:
+            response_body = {
+                "status": "Successful",
+                'userInfo': result
+            }
+    return response_body

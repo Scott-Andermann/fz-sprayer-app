@@ -10,6 +10,8 @@ import { gunmetal, lightGreen, lightGunmetal, white, red, darkGreen } from '../l
 import HeaderConnection from '../components/HeaderConnection';
 
 import {View, Text} from 'react-native';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 
 
 const appTheme ={
@@ -26,11 +28,13 @@ const appTheme ={
 }
 
 export type RootStackParamList = {
+  Login: undefined;
   Home: undefined;
   Job: undefined;
   History: undefined;
   Account: undefined;
   Map: undefined;
+  Register: undefined;
   Device: { device: Device };
 };
 
@@ -39,6 +43,7 @@ interface IProps {
   setExposeModal?: Dispatch<SetStateAction<boolean>>,
   setSpraySeconds?: Dispatch<SetStateAction<number>>,
   disconnectFromDevice: any,
+  token: string
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -52,7 +57,7 @@ function HeaderLogo() {
 }
 
 
-export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds}: IProps) => (
+export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds, token}: IProps) => (
     // <NavigationContainer theme={appTheme}>
     //   <Tab.Navigator>
     //     <Tab.Screen name="Home" component={Home} options={{title: 'Home', headerTitle: () => <HeaderConnection title='Home' />}} />
@@ -70,7 +75,9 @@ export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice
     // </NavigationContainer>
     <NavigationContainer theme={appTheme}>
       <Stack.Navigator screenOptions={{presentation: 'card'}}>
+        {token === '' && <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/> }
         <Stack.Screen name="Home" component={Home} options={{title: 'Home', headerTitle: () => <HeaderConnection title='Home' />}} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}} />
         <Stack.Screen name="Job" options={{title: 'Job', headerTitle: () => <HeaderConnection title='Job' />}}>
           {(props) => <NewJobScreen {...props}  
               // connected={connected} 

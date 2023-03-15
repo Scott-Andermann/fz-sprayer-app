@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
 import { RootNavigator } from '../navigation';
 import { useAppDispatch } from '../redux/hooks';
 import { connect, disconnect } from '../redux/slicers/connectedSlice';
 import { setTrue, setFalse } from '../redux/slicers/tryingToConnectSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAllData } from '../redux/slicers/dataSlice';
 import DeviceModal from './DeviceModal';
 import useBLE from './useBLE';
@@ -31,6 +25,20 @@ const BLEWrapper = () => {
         setSpraySeconds,
     } = useBLE();
     const [exposeModal, setExposeModal] = useState<boolean>(false);
+    const [token, setToken] = useState<string>('')
+
+    const getToken = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@token');
+            if (value !== null) {
+                setToken(value);
+            }
+        }
+        catch (e) {
+            console.log('error requesting token: ', e);
+            
+        }
+    }
 
     const dispatch = useAppDispatch();
 
@@ -41,10 +49,6 @@ const BLEWrapper = () => {
             }
         });
     };
-
-    const closeModal = () => {
-        setExposeModal(false);
-    }
 
     const cancelModal = () => {
         setExposeModal(false);
@@ -60,6 +64,10 @@ const BLEWrapper = () => {
         dispatch(setAllData({flowRate: flowRate, totalFlow: totalFlow, spraySeconds:spraySeconds, startTime:startTime, startingFlow: totalFlow, offset: 0}))
         // return data;
     }
+
+    useEffect(() => {
+        getToken()
+    }, []);
 
     useEffect(() => {
         if (exposeModal) {
@@ -88,9 +96,10 @@ const BLEWrapper = () => {
                 setExposeModal={setExposeModal} 
                 disconnectFromDevice={disconnectFromDevice} 
                 setSpraySeconds={setSpraySeconds}
+                token={token}
                 />
             <DeviceModal
-                closeModal={closeModal}
+                closeModal={cancelModal}
                 cancelModal={cancelModal}
                 visible={exposeModal}
                 connectToPeripheral={connectToDevice}

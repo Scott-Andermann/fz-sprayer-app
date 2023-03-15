@@ -15,6 +15,7 @@ import RoundButton from '../components/RoundButton';
 import { decrement, increment } from '../redux/slicers/counterSlice';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import Footer from '../components/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({ navigation }:{navigation: any}) => {
 
@@ -22,6 +23,32 @@ const Home = ({ navigation }:{navigation: any}) => {
     const location = useAppSelector((state) => state.location);
 
     const url = 'https://fzspray.com/'
+
+    const logout = async () => {
+        try {
+            await AsyncStorage.removeItem('@token');
+            navigation.navigate('Login');
+        } catch (e) {
+            console.log('error: ', e);
+            
+        }
+    }
+
+    const getToken = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@token');
+            
+            if (value !== null) {
+                // setToken(value);
+                console.log(value);
+                
+            }
+        }
+        catch (e) {
+            console.log('error requesting token: ', e);
+            
+        }
+    }
 
     const openStoreLink = async () => {
         try {
@@ -38,9 +65,10 @@ const Home = ({ navigation }:{navigation: any}) => {
                     style={styles.mainImage}
                     source={require('../assets/fzlogo.png')} />
             </View>
+            <RoundButton iconType='shower' action={logout}/>
+            <RoundButton iconType='shower' action={getToken}/>
             <View style={styles.spacer}></View>
             {/* <View style={styles.buttonContainer}>
-                <RoundButton iconType='shower' action={() => navigation.navigate('Job')}/>
                 <RoundButton iconType='list-ul' action={() => navigation.navigate('History')} />
                 <RoundButton iconType='user' action={() => navigation.navigate('Account')} />
                 <RoundButton iconType='shopping-cart' action={openStoreLink} />
