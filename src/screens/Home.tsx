@@ -6,8 +6,11 @@ import {
     Linking,
     Alert,
     Text,
+    ImageBackground,
+    Dimensions,
+    ScrollView
 } from 'react-native';
-import { darkGreen, gunmetal } from '../lib/colors';
+import { darkGreen, gunmetal, lightGreen } from '../lib/colors';
 // import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 // import {faMugSaucer} from '@fortawesome/free-solid-svg-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,37 +19,35 @@ import { decrement, increment } from '../redux/slicers/counterSlice';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import Footer from '../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import HomeCard from '../components/HomeCard';
+import { FlatList } from 'react-native-gesture-handler';
 
-const Home = ({ navigation }:{navigation: any}) => {
 
-    const count = useAppSelector((state) => state.counter.value)
+const screenHeight = Dimensions.get('window').height
+
+const Home = ({ navigation }: { navigation: any }) => {
+
+    const count = useAppSelector((state) => state.counter.value);
     const location = useAppSelector((state) => state.location);
+
+    const firstName = useAppSelector((state) => state.userInfo.firstName)
 
     const url = 'https://fzspray.com/'
 
-    const logout = async () => {
-        try {
-            await AsyncStorage.removeItem('@token');
-            navigation.navigate('Login');
-        } catch (e) {
-            console.log('error: ', e);
-            
-        }
-    }
 
     const getToken = async () => {
         try {
             const value = await AsyncStorage.getItem('@token');
-            
+
             if (value !== null) {
                 // setToken(value);
                 console.log(value);
-                
             }
         }
         catch (e) {
             console.log('error requesting token: ', e);
-            
+
         }
     }
 
@@ -58,76 +59,128 @@ const Home = ({ navigation }:{navigation: any}) => {
         }
     }
 
+    const data = ['test', 'one', 'two']
+
     return (
+
         <View style={styles.container}>
-            <View style={styles.imageContainer}>
-                <Image 
-                    style={styles.mainImage}
-                    source={require('../assets/fzlogo.png')} />
-            </View>
-            <RoundButton iconType='shower' action={logout}/>
-            <RoundButton iconType='shower' action={getToken}/>
-            <View style={styles.spacer}></View>
-            {/* <View style={styles.buttonContainer}>
-                <RoundButton iconType='list-ul' action={() => navigation.navigate('History')} />
-                <RoundButton iconType='user' action={() => navigation.navigate('Account')} />
-                <RoundButton iconType='shopping-cart' action={openStoreLink} />
-            </View> */}
-            {/* <Text>Location: ({location.latitude}, {location.longitude})</Text> */}
-            <Footer screen='home' navigation={navigation}/>
+            <ScrollView>
+                <ImageBackground source={require('../assets/sprayer_home.webp')} style={[styles.backgroundImage, styles.shadowProp]} resizeMode='cover' blurRadius={5}>
+                    <View style={styles.header}>
+                        <MaterialIcons name='person-outline' size={50} color={lightGreen} />
+                        <Text style={styles.headerText}>TRUFLOW</Text>
+                    </View>
+                    <View style={styles.welcomeWrapper}>
+                        <Text style={styles.welcomeText}>Welcome,</Text>
+                        <Text style={[styles.welcomeText, { fontSize: 40, fontWeight: 'bold' }]}>{firstName}</Text>
+                    </View>
+                    <View style={[styles.headshot, styles.shadowProp]}>
+                        <MaterialIcons name='image-search' size={80} color='#8F8F8F' />
+                    </View>
+                </ImageBackground>
+                <View style={styles.spacer} />
+                <View style={styles.contentWrapper} >
+                    <View style={styles.contentWide}></View>
+                        <View style={styles.contentCardContainer}>
+                            {/* <FlatList data={data} renderItem={(item) => <HomeCard />} /> */}
+                            <HomeCard />
+                            <HomeCard />
+                            <HomeCard />
+                        </View>
+                </View>
+                <View style={styles.lowerSpacer} />
+            </ScrollView>
+            <Footer screen='home' navigation={navigation} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: gunmetal,
+        backgroundColor: 'white',
         height: '100%',
         flex: 1,
         flexDirection: 'column',
         // alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
-    buttonContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        // width: '100%',
-        // marginHorizontal: 30
-    },
-    button: {
-        backgroundColor: darkGreen,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 70,
-        width: 70,
-        // marginHorizontal: 20,
-        marginBottom: 5,
-        borderRadius: 35,
-    },
-    buttonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-    },
-    mainImage: {
-        width: '90%',
-        height: 200,
-        resizeMode: 'center',
-    },
-    imageContainer: {
+    backgroundImage: {
         width: '100%',
+        height: 0.3 * screenHeight,
+    },
+    header: {
         display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        flex: 1
+        paddingTop: 10
+    },
+    headerText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 28,
+        letterSpacing: -1.5,
+    },
+    welcomeWrapper: {
+        padding: 24
+    },
+    welcomeText: {
+        fontSize: 30,
+        color: 'white',
+        opacity: 1,
+    },
+    headshot: {
+        height: 120,
+        width: 120,
+        borderRadius: 60,
+        backgroundColor: '#ECECEC',
+        position: 'absolute',
+        right: 30,
+        bottom: -60,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     spacer: {
-        height: 100
+        height: 60,
     },
-    iconStyle: {
-        color: 'white',
+    contentWrapper: {
+        margin: 20,
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        // backgroundColor: 'blue',
+    },
+    contentWide: {
+        width: '100%',
+        backgroundColor: '#ECECEC',
+        height: 120,
+        borderRadius: 20,
+    },
+    contentCardContainer: {
+        marginTop: 10,
+        display: 'flex',
+        flex: 2,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+        // justifyContent: 'flex-start',
+        // maxWidth: 200,
+    },
+    lowerSpacer: {
+        height: 80,
+    },
+    shadowProp: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.65,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     }
 })
 

@@ -9,29 +9,29 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const Footer = ({screen, navigation}: {screen: string, navigation: any}) => {
 
-    const iconSize = 28
+    const iconSize = 22
     return (
         <View style={styles.footerWrapper}>
         <View style={styles.footerContainer}>
-            <TouchableOpacity style={{...styles.navButton, backgroundColor: screen === 'home' ? lightGreen : darkGreen}} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={[styles.navButton, {backgroundColor: screen === 'home' ? lightGreen : darkGreen}, screen === 'home' && styles.shadowProp]} onPress={() => navigation.navigate('Home')}>
                 <Ionicons name='home-sharp' size={iconSize} color={screen === 'home' ? darkGreen : 'white'} />
-                <Text style={{...styles.navButtonText, color: screen === 'home' ? darkGreen : 'white'}}>Home</Text>
+                <Text style={{...styles.navButtonText, color: screen === 'home' ? darkGreen : 'white'}}>HOME</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{...styles.navButton, backgroundColor: screen === 'history' ? lightGreen : darkGreen}} onPress={() => navigation.navigate('History')}>
+            <TouchableOpacity style={[styles.navButton, {backgroundColor: screen === 'history' ? lightGreen : darkGreen}, screen === 'history' && styles.shadowProp]} onPress={() => navigation.navigate('History')}>
                 <FontAwesome5 name='calendar-day' size={iconSize} color='white' />
-                <Text style={styles.navButtonText}>History</Text>
+                <Text style={styles.navButtonText}>HISTORY</Text>
             </TouchableOpacity>
             <View style={styles.placeholder}></View>
-            <TouchableOpacity style={{...styles.navButton, backgroundColor: screen === 'profile' ? lightGreen : darkGreen}} onPress={() => navigation.navigate('Account')}>
+            <TouchableOpacity style={[styles.navButton, {backgroundColor: screen === 'profile' ? lightGreen : darkGreen}, screen === 'profile' && styles.shadowProp]} onPress={() => navigation.navigate('Account')}>
                 <Ionicons name='md-person-sharp' size={iconSize} color='white' />
-                <Text style={styles.navButtonText}>Profile</Text>
+                <Text style={styles.navButtonText}>PROFILE</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{...styles.navButton, backgroundColor: screen === 'settings' ? lightGreen : darkGreen}} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={[styles.navButton, {backgroundColor: screen === 'settings' ? lightGreen : darkGreen}, screen === 'settings' && styles.shadowProp]} onPress={() => navigation.navigate('Settings')}>
                 <Ionicons name='settings-sharp' size={iconSize} color='white' />
-                <Text style={styles.navButtonText}>Settings</Text>
+                <Text style={styles.navButtonText}>SETTINGS</Text>
             </TouchableOpacity>
         </View>
-        <View style={{backgroundColor: lightGreen, borderRadius: 45}}>
+        <View style={[{backgroundColor: lightGreen, borderRadius: 45}, styles.shadowProp]}>
             <TouchableOpacity style={styles.newJobButton} onPress={() => navigation.navigate('Job')}>
                 <Icon name={'plus-a'} size={38} color={lightGreen} />
                 <Text style={styles.newJobButtonText}>NEW</Text>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: 80,
+        height: 60,
         backgroundColor: darkGreen,
         display: 'flex',
         flexDirection: 'row',
@@ -94,10 +94,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 8,
         height: '100%',
+        width: 70,
     },
     navButtonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 12,
+        letterSpacing: -0.5
+    },
+    shadowProp: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 0.65,
+        shadowRadius: 6.27,
+
+        elevation: 10,
     }
 })
 

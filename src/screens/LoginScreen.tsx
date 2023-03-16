@@ -8,6 +8,8 @@ import GradientButton from '../components/GradientButton';
 import OutlineButton from '../components/OutlineButton';
 import {sha256} from 'js-sha256';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppDispatch } from '../redux/hooks';
+import { setUserInfo } from '../redux/slicers/userInfoSlice';
 
 
 
@@ -16,6 +18,8 @@ const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
+
+    const dispatch = useAppDispatch();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -38,8 +42,9 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         const response = await fetch(`http://localhost:5000/login`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
         const userInfo = await response.json();
         if (userInfo['status'] === 'Successful') {
-            console.log(userInfo.userInfo);
-            await storeToken(userInfo.userInfo[0])
+            const data = userInfo.userInfo
+            await storeToken(data[0])
+            dispatch(setUserInfo({userID: data[0], email: data[1], firstName: data[3], lastName: data[4]}))
             setInvalid(false);
             setPassword('');
             navigation.navigate('Home');

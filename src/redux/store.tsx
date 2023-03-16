@@ -6,6 +6,7 @@ import connectedReducer from './slicers/connectedSlice';
 import tryingToConnectReducer from './slicers/tryingToConnectSlice';
 import dataReducer from './slicers/dataSlice';
 import locationReducer from './slicers/locationSlice';
+import userInfoReducer from './slicers/userInfoSlice';
 
 const rootReducer = combineReducers({
         location: locationReducer,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
         spraySeconds: spraySecondsReducer,
         connected: connectedReducer,
         tryingToConnect: tryingToConnectReducer,
-        data: dataReducer
+        data: dataReducer,
+        userInfo: userInfoReducer
     },
 );
 

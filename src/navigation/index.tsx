@@ -12,6 +12,8 @@ import HeaderConnection from '../components/HeaderConnection';
 import {View, Text} from 'react-native';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import AppLoadingScreen from '../screens/AppLoadingScreen';
 
 
 const appTheme ={
@@ -35,6 +37,7 @@ export type RootStackParamList = {
   Account: undefined;
   Map: undefined;
   Register: undefined;
+  Settings: undefined;
   Device: { device: Device };
 };
 
@@ -43,7 +46,8 @@ interface IProps {
   setExposeModal?: Dispatch<SetStateAction<boolean>>,
   setSpraySeconds?: Dispatch<SetStateAction<number>>,
   disconnectFromDevice: any,
-  token: string
+  token: string,
+  initialRoute: string | null,
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -57,7 +61,7 @@ function HeaderLogo() {
 }
 
 
-export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds, token}: IProps) => (
+export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice, setSpraySeconds, token, initialRoute}: IProps) => {
     // <NavigationContainer theme={appTheme}>
     //   <Tab.Navigator>
     //     <Tab.Screen name="Home" component={Home} options={{title: 'Home', headerTitle: () => <HeaderConnection title='Home' />}} />
@@ -73,10 +77,12 @@ export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice
     //     <Tab.Screen name="Account" options={{title: 'Account Info', headerTitle: () => <HeaderConnection title='Account' />}} component={AccountInfoScreen} />
     //   </Tab.Navigator>
     // </NavigationContainer>
-    <NavigationContainer theme={appTheme}>
-      <Stack.Navigator screenOptions={{presentation: 'card'}}>
-        {token === '' && <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/> }
-        <Stack.Screen name="Home" component={Home} options={{title: 'Home', headerTitle: () => <HeaderConnection title='Home' />}} />
+    return initialRoute !== null ? (
+
+      <NavigationContainer>
+      <Stack.Navigator screenOptions={{presentation: 'card'}} initialRouteName={token === '' ? 'Login' : 'Home'}>
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}} />
         <Stack.Screen name="Job" options={{title: 'Job', headerTitle: () => <HeaderConnection title='Job' />}}>
           {(props) => <NewJobScreen {...props}  
@@ -88,6 +94,8 @@ export const RootNavigator = ({exposeModal, setExposeModal, disconnectFromDevice
         </Stack.Screen>
         <Stack.Screen name="History" options={{title: 'Job History', headerTitle: () => <HeaderConnection title='Job History' />}} component={JobListScreen} />
         <Stack.Screen name="Account" options={{title: 'Account Info', headerTitle: () => <HeaderConnection title='Account' />}} component={AccountInfoScreen} />
+        <Stack.Screen name="Settings" options={{title: 'Settings', headerTitle: () => <HeaderConnection title='Settings' />}} component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-);
+              ) : <AppLoadingScreen />
+};

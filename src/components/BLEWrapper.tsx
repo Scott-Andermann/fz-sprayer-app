@@ -26,19 +26,8 @@ const BLEWrapper = () => {
     } = useBLE();
     const [exposeModal, setExposeModal] = useState<boolean>(false);
     const [token, setToken] = useState<string>('')
+    const [initialRoute, setInitialRoute] = useState<string | null>(null);
 
-    const getToken = async () => {
-        try {
-            const value = await AsyncStorage.getItem('@token');
-            if (value !== null) {
-                setToken(value);
-            }
-        }
-        catch (e) {
-            console.log('error requesting token: ', e);
-            
-        }
-    }
 
     const dispatch = useAppDispatch();
 
@@ -66,6 +55,21 @@ const BLEWrapper = () => {
     }
 
     useEffect(() => {
+        const getToken = async () => {
+            try {
+                const value = await AsyncStorage.getItem('@token');
+                if (value !== null) {
+                    setToken(value);
+                    setInitialRoute('Home');
+                } else {
+                    setInitialRoute('Login');
+                }
+            }
+            catch (e) {
+                console.log('error requesting token: ', e);
+                
+            }
+        }
         getToken()
     }, []);
 
@@ -97,6 +101,7 @@ const BLEWrapper = () => {
                 disconnectFromDevice={disconnectFromDevice} 
                 setSpraySeconds={setSpraySeconds}
                 token={token}
+                initialRoute={initialRoute}
                 />
             <DeviceModal
                 closeModal={cancelModal}
